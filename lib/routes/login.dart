@@ -66,7 +66,7 @@ class _FormWidgetState extends State<FormWidget> {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(const SnackBar(content: Text('Successfully logged in')));
-        Navigator.of(context).pushReplacementNamed('/home');
+        Navigator.of(context).pushReplacementNamed('/welcome');
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('login failed: ${e.toString()}')),

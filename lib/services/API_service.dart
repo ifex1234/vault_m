@@ -8,8 +8,8 @@ class ApiService {
   // For Android Emulator, use 10.0.2.2
   // For iOS Simulator, use localhost
   // For Web, use localhost
-  // final String _baseUrl = 'https://vault-server-wnbz.onrender.com';
-  final String _baseUrl = 'http://192.168.43.133:5347';
+  final String _baseUrl = 'https://vault-server-w33c.onrender.com';
+  // final String _baseUrl = 'http://192.168.43.133:64884';
 
   // Helper for making requests with authentication
   Future<http.Response> _makeAuthenticatedRequest(
@@ -56,11 +56,16 @@ class ApiService {
       }),
     );
 
-    if (response.statusCode == 200) {
-      return User.fromJson(jsonDecode(response.body));
+    if (response.statusCode == 201) {
+      // return User.fromJson(jsonDecode(response.body));
+      final data = jsonDecode(response.body);
+      return data['message'];
     } else {
       final error = jsonDecode(response.body);
       throw Exception(error['message'] ?? 'Failed to register');
+      // throw Exception(
+      //   'Failed to create user. Status Code: ${response.statusCode}, Body: ${response.body}',
+      // );
     }
   }
 
@@ -72,7 +77,7 @@ class ApiService {
       body: jsonEncode({'email': email, 'password': password}),
     );
 
-    if (response.statusCode == 201) {
+    if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       return data['access_token'];
     } else {
@@ -170,6 +175,21 @@ class ApiService {
     } else {
       final error = jsonDecode(response.body);
       throw Exception(error['message'] ?? 'Failed to fetch all posts');
+    }
+  }
+
+  Future<User?> getUserDetails(String s) async {
+    final response = await _makeAuthenticatedRequest(
+      'auth/user-details',
+      'GET',
+      s,
+    );
+
+    if (response.statusCode == 200) {
+      return User.fromJson(jsonDecode(response.body));
+    } else {
+      final error = jsonDecode(response.body);
+      throw Exception(error['message'] ?? 'Failed to fetch user details');
     }
   }
 }

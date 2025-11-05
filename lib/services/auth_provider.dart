@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:vault_m/models/users.dart';
-import 'package:vault_m/services/API_service.dart'; // You might not have the full User object after login
+import 'package:vault_m/services/api_service.dart'; // You might not have the full User object after login
 
 class AuthProvider extends ChangeNotifier {
   final ApiService _apiService = ApiService();
@@ -25,14 +25,39 @@ class AuthProvider extends ChangeNotifier {
     if (_token != null && !JwtDecoder.isExpired(_token!)) {
       _isAuthenticated = true;
       // You can decode the token to get basic user info like email or id if needed
-      // Map<String, dynamic> decodedToken = JwtDecoder.decode(_token!);
-      // _currentUser = User(id: decodedToken['sub'], email: decodedToken['email'], createdAt: DateTime.now()); // Placeholder
+      Map<String, dynamic> decodedToken = JwtDecoder.decode(_token!);
+      _currentUser = User(
+        id: decodedToken['sub'],
+        email: decodedToken['email'],
+        createdAt: DateTime.now(),
+        firstName: decodedToken['firstName'],
+        lastName: decodedToken['lastName'],
+        pin: decodedToken['pin'],
+      ); // Placeholder
     } else {
       _token = null; // Token expired or not found
       _isAuthenticated = false;
       await _secureStorage.delete(key: 'jwt_token'); // Clear invalid token
     }
     notifyListeners();
+  }
+
+  Future loadUserDetails() async {
+    if (_token != null) {
+      try {
+        _currentUser = await _apiService.getUserDetails(_token!);
+
+        notifyListeners();
+        return _currentUser;
+      } catch (e) {
+        // Handle error, possibly invalid token
+        _token = null;
+        _isAuthenticated = false;
+        _currentUser = null;
+        await _secureStorage.delete(key: 'jwt_token');
+        notifyListeners();
+      }
+    }
   }
 
   Future<void> login(String email, String password) async {

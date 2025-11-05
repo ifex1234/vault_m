@@ -9,7 +9,7 @@ import 'dart:async';
 //   final String password;
 //   final String firstName;
 //   final String lastName;
-//   final int pin;
+//   final String pin;
 
 //   const FormData({
 //     required this.password,
@@ -26,14 +26,14 @@ import 'dart:async';
 //         'password': String password,
 //         'firstName': String firstName,
 //         'lastName': String lastName,
-//         'pin': int pin,
+//         'pin': dynamic pin,
 //       } =>
 //         FormData(
 //           email: email,
 //           password: password,
 //           firstName: firstName,
 //           lastName: lastName,
-//           pin: pin,
+//           pin: pin?.toString() ?? '',
 //         ),
 //       _ => throw const FormatException('Failed to load FormData.'),
 //     };
@@ -45,10 +45,10 @@ import 'dart:async';
 //   String firstName,
 //   String lastName,
 //   String email,
-//   int pin,
+//   String pin,
 // ) async {
 //   final response = await http.post(
-//     Uri.parse('https://vault-server-wnbz.onrender.com/auth/register'),
+//     Uri.parse('http://192.168.43.133:5347/auth/register'),
 //     headers: <String, String>{
 //       'Content-Type': 'application/json; charset=UTF-8',
 //     },
@@ -57,18 +57,21 @@ import 'dart:async';
 //       'firstName': firstName,
 //       'lastName': lastName,
 //       'email': email,
-//       'pin': pin.toString(),
+//       'pin': pin,
 //     }),
 //   );
 
 //   if (response.statusCode == 201) {
+//     print('Server Response Body: ${response.body}');
 //     // If the server did return a 201 CREATED response,
 //     // then parse the JSON.
 //     return FormData.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
 //   } else {
 //     // If the server did not return a 201 CREATED response,
 //     // then throw an exception.
-//     throw Exception('Failed to create user.');
+//     throw Exception(
+//       'Failed to create user. Status Code: ${response.statusCode}, Body: ${response.body}',
+//     ); // More info on error
 //   }
 // }
 
@@ -128,19 +131,6 @@ class _FormWidgetState extends State<FormWidget> {
   bool _isLoading = false;
   // bool _isPasswordValid = true;
   // bool _obscurePassword = true;
-
-  // void _submit() {
-  //   final form = _formKey.currentState;
-  //   if (form != null && form.validate()) {
-  //     form.save();
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(
-  //         content: Text('Account with email $_email and $_password signed in'),
-  //       ),
-  //     );
-  //   }
-  // }
-
   Future<void> _register() async {
     if (_formKey.currentState!.validate()) {
       setState(() {
@@ -155,13 +145,11 @@ class _FormWidgetState extends State<FormWidget> {
           _pinController.text,
         );
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Registration successful! Please log in.'),
-          ),
+          const SnackBar(content: Text('Registration successful!')),
         );
         Navigator.of(context).pushReplacementNamed(
           '/home',
-        ); // Navigate to login after successful registration
+        ); // Navigate to welcome page after successful registration
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Registration failed: ${e.toString()}')),

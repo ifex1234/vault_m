@@ -9,14 +9,14 @@ class AvatarWidget extends StatelessWidget {
   final TextStyle? textStyle;
 
   const AvatarWidget({
-    Key? key,
+    super.key,
     this.imageUrl,
     this.initials,
     this.radius = 44.0, // Default radius
     this.backgroundColor,
     this.foregroundColor,
     this.textStyle,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

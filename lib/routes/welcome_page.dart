@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:vault_m/components/avatar.dart';
+import 'package:vault_m/routes/password_reset.dart';
+import 'package:vault_m/services/auth_provider.dart';
+import 'package:provider/provider.dart';
+import 'dart:async';
 
 class WelcomePage extends StatelessWidget {
   const WelcomePage({super.key});
@@ -45,7 +49,7 @@ class NumberPadWithBadge extends StatefulWidget {
   final int maxInputLength;
 
   const NumberPadWithBadge({
-    Key? key,
+    super.key,
     this.onInputChanged,
     this.onConfirm,
     this.confirmButtonText = 'Confirm',
@@ -54,7 +58,7 @@ class NumberPadWithBadge extends StatefulWidget {
     this.badgeColor,
     this.badgeHeight = 60.0,
     this.maxInputLength = 10,
-  }) : super(key: key);
+  });
 
   @override
   State<NumberPadWithBadge> createState() => _NumberPadWithBadgeState();
@@ -72,6 +76,33 @@ class _NumberPadWithBadgeState extends State<NumberPadWithBadge> {
     }
   }
 
+  Future<void> _unlock() async {
+    try {
+      final data = await Provider.of<AuthProvider>(
+        context,
+        listen: false,
+      ).loadUserDetails();
+      if (_currentInput == data?.pin) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Welcome')));
+        Navigator.of(context).pushReplacementNamed('/home');
+      } else {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Invalid pin')));
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('login failed: ${e.toString()}')));
+    } finally {
+      setState(() {
+        _currentInput = '';
+      });
+    }
+  }
+
   // void _onClearButtonPressed() {
   //   setState(() {
   //     _currentInput = '';
@@ -86,10 +117,6 @@ class _NumberPadWithBadgeState extends State<NumberPadWithBadge> {
       });
       widget.onInputChanged?.call(_currentInput);
     }
-  }
-
-  void _onConfirmButtonPressed() {
-    widget.onConfirm?.call(_currentInput);
   }
 
   @override
@@ -137,7 +164,7 @@ class _NumberPadWithBadgeState extends State<NumberPadWithBadge> {
         ),
         const SizedBox(height: 25),
 
-        Container(
+        SizedBox(
           width: 250,
           child: GridView.builder(
             shrinkWrap: true, // Important for fitting inside Column/ScrollView
@@ -255,7 +282,7 @@ class _NumberPadWithBadgeState extends State<NumberPadWithBadge> {
         const SizedBox(height: 50),
 
         ElevatedButton(
-          onPressed: _onConfirmButtonPressed,
+          onPressed: _unlock,
           style: ElevatedButton.styleFrom(
             backgroundColor: const Color.fromARGB(255, 229, 200, 235),
             shape: RoundedRectangleBorder(
