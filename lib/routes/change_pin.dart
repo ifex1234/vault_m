@@ -1,27 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vault_m/components/obsure_field.dart';
-import 'package:vault_m/components/plain_field.dart';
 import 'package:vault_m/services/auth_provider.dart';
 
-class ResetPasswordPage extends StatefulWidget {
-  const ResetPasswordPage({super.key});
+class ChangePin extends StatefulWidget {
+  const ChangePin({super.key});
 
   @override
-  State<ResetPasswordPage> createState() => _ResetPasswordPageState();
+  State<ChangePin> createState() => _ChangePinState();
 }
 
-class _ResetPasswordPageState extends State<ResetPasswordPage> {
+class _ChangePinState extends State<ChangePin> {
   final _formKey = GlobalKey<FormState>();
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
-  final _confirmPasswordController = TextEditingController();
-  bool _isEmailValid = true;
-  bool _isPasswordValid = true;
-  bool _isPassword1Valid = true;
+  final _oldPinController = TextEditingController();
+  final _newPinController = TextEditingController();
+  final _confirmNewPinController = TextEditingController();
+  bool _isOldPinValid = true;
+  bool _isNewPinValid = true;
+  bool _isConfirmPinValid = true;
   bool _isLoading = false;
 
-  Future<void> _passwordReset() async {
+  Future<void> _pinReset() async {
     if (_formKey.currentState!.validate()) {
       setState(() {
         _isLoading = true;
@@ -30,11 +29,11 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
         await Provider.of<AuthProvider>(
           context,
           listen: false,
-        ).resetPassword(_emailController.text, _passwordController.text);
+        ).resetPin(_oldPinController.text, _newPinController.text);
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text(
-              'Password updated successfully, you can now sign in with your new password',
+              'Pin updated successfully, you can now sign in with your new pin',
             ),
           ),
         );
@@ -43,7 +42,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
         ); // Navigate to login after successful registration
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('password reset failed: ${e.toString()}')),
+          SnackBar(content: Text('pin reset failed: ${e.toString()}')),
         );
       } finally {
         setState(() {
@@ -53,33 +52,29 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
     }
   }
 
-  String? _validateEmail(String? value) {
+  String? _validateOldPin(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Please enter an email';
-    }
-    final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
-    if (!emailRegex.hasMatch(value)) {
-      return 'Invalid email address';
+      return 'Please enter your old pin';
     }
     return null;
   }
 
-  String? _validatePassword(String? value) {
+  String? _validateNewPin(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Please enter a password';
+      return 'Please enter a 4 digit pin';
     }
-    if (value.length < 6) {
-      return 'Password must be at least 6 characters long';
+    if (value.length != 4) {
+      return 'Pin must not be less than or greater than 4 long';
     }
     return null; // Return null if the password is valid
   }
 
-  String? _validateConfirmPassword(String? value) {
+  String? _validateConfirmPin(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Please re-enter your password';
+      return 'Please re-enter your new pin';
     }
-    if (value != _passwordController.text) {
-      return 'Passwords do not match';
+    if (value != _newPinController.text) {
+      return 'Pins do not match';
     }
     return null; // Return null if the confirm password is valid
   }
@@ -89,11 +84,11 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
     return Scaffold(
       appBar: AppBar(
         // leading: ,
-        title: const Text('Sign In'),
+        title: const Text('Change pin'),
         backgroundColor: const Color.fromARGB(255, 252, 232, 252),
       ),
       body: Padding(
-        padding: const EdgeInsets.only(left: 45, top: 120),
+        padding: const EdgeInsets.only(left: 45, top: 60),
         child: SizedBox(
           height: 500,
           width: 320,
@@ -102,62 +97,61 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
             children: [
               SizedBox(height: 40),
               Text(
-                'Change Password',
+                'Change pin',
                 style: TextStyle(fontSize: 30, fontWeight: FontWeight.w500),
               ),
-              SizedBox(height: 20),
 
-              PlainField2(
-                controller: _emailController,
-                labelText: 'Email',
-                hintText: 'Enter your email',
+              ObscuredField(
+                controller: _oldPinController,
+                isInputValid: _isOldPinValid,
+                labelText: 'Old pin',
+                hintText: 'Old pin',
                 validator: (value) {
-                  final error = _validateEmail(value);
+                  final error = _validateOldPin(value);
                   setState(() {
-                    _isEmailValid = error == null;
+                    _isOldPinValid = error == null;
                   });
                   return error;
                 },
-                isInputValid: _isEmailValid,
+              ),
+              SizedBox(height: 75),
+
+              ObscuredField(
+                controller: _newPinController,
+                isInputValid: _isNewPinValid,
+                labelText: 'New pin',
+                hintText: 'New pin',
+                validator: (value) {
+                  final error = _validateNewPin(value);
+                  setState(() {
+                    _isNewPinValid = error == null;
+                  });
+                  return error;
+                },
               ),
               SizedBox(height: 25),
 
-              ObscuredField2(
-                controller: _passwordController,
-                labelText: 'Password',
-                hintText: 'Enter your password',
+              ObscuredField(
+                controller: _confirmNewPinController,
+                isInputValid: _isConfirmPinValid,
+                labelText: 'Confirm pin',
+                hintText: 'Confirm pin',
                 validator: (value) {
-                  final error = _validatePassword(value);
+                  final error = _validateConfirmPin(value);
                   setState(() {
-                    _isPasswordValid = error == null;
+                    _isConfirmPinValid = error == null;
                   });
                   return error;
                 },
-                isInputValid: _isPassword1Valid,
-              ),
-              SizedBox(height: 25),
-
-              ObscuredField2(
-                controller: _confirmPasswordController,
-                labelText: 'Confirm Password',
-                hintText: 'Confirm Password',
-                validator: (value) {
-                  final error = _validateConfirmPassword(value);
-                  setState(() {
-                    _isPassword1Valid = error == null;
-                  });
-                  return error;
-                },
-                isInputValid: _isPassword1Valid,
               ),
               SizedBox(height: 25),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color.fromARGB(255, 235, 221, 240),
                 ),
-                onPressed: _passwordReset,
+                onPressed: _pinReset,
                 child: Text(
-                  'Change Password',
+                  'Change',
                   style: TextStyle(color: Colors.deepPurple),
                 ),
               ),

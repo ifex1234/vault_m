@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:vault_m/components/obsure_field.dart';
+import 'package:vault_m/components/plain_field.dart';
 import 'package:vault_m/routes/password_reset.dart';
 import 'package:vault_m/services/auth_provider.dart';
 import 'package:provider/provider.dart';
@@ -17,17 +19,18 @@ class LoginPage extends StatelessWidget {
           width: 320,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               Text(
                 'Vault Mobile',
                 style: TextStyle(fontSize: 50, fontWeight: FontWeight.w500),
               ),
-
+              SizedBox(height: 20),
               Text(
                 'Sign in',
                 style: TextStyle(fontSize: 25, fontWeight: FontWeight.w400),
               ),
+              SizedBox(height: 20),
 
               FormWidget(),
             ],
@@ -118,8 +121,10 @@ class _FormWidgetState extends State<FormWidget> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              TextFormField(
+              PlainField(
                 controller: _emailController,
+                labelText: 'Email',
+                hintText: 'Enter your email',
                 validator: (value) {
                   final error = _validateEmail(value);
                   setState(() {
@@ -127,34 +132,14 @@ class _FormWidgetState extends State<FormWidget> {
                   });
                   return error;
                 },
-
-                onSaved: (val) {
-                  _emailController.text = val!;
-                },
-                keyboardType: TextInputType.emailAddress,
-                decoration: InputDecoration(
-                  hintText: 'Enter your email',
-                  labelText: 'Email',
-                  filled: true,
-                  border: UnderlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  errorBorder: _isEmailValid
-                      ? null // Use default error border when valid
-                      : const UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.red, width: 4.0),
-                        ),
-                  fillColor: const Color.fromARGB(255, 241, 223, 245),
-                  suffixIcon: !_isEmailValid
-                      ? const Icon(Icons.error, color: Colors.red)
-                      : null,
-                ),
+                isInputValid: _isEmailValid,
               ),
-              SizedBox(height: 5),
+              SizedBox(height: 25),
 
-              TextFormField(
+              ObscuredField2(
                 controller: _passwordController,
-                obscureText: true,
+                labelText: 'Password',
+                hintText: 'Enter your password',
                 validator: (value) {
                   final error = _validatePassword(value);
                   setState(() {
@@ -162,23 +147,7 @@ class _FormWidgetState extends State<FormWidget> {
                   });
                   return error;
                 },
-                onSaved: (val) {
-                  _passwordController.text = val!;
-                },
-                decoration: InputDecoration(
-                  hintText: 'Enter your password',
-                  labelText: 'Password',
-                  filled: true,
-                  suffixIcon: !_isPasswordValid
-                      ? const Icon(Icons.error, color: Colors.red)
-                      : null,
-                  fillColor: Color.fromARGB(255, 241, 223, 245),
-                  errorBorder: _isPasswordValid
-                      ? null // Use default error border when valid
-                      : const UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.red, width: 4.0),
-                        ),
-                ),
+                isInputValid: _isPasswordValid,
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 30.0),

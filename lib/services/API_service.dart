@@ -101,6 +101,21 @@ class ApiService {
     }
   }
 
+  Future<User> resetPin(String oldPin, String newPin) async {
+    final response = await http.put(
+      Uri.parse('$_baseUrl/auth/update-pin'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'oldPin': oldPin, 'newPin': newPin}),
+    );
+
+    if (response.statusCode == 201) {
+      return User.fromJson(jsonDecode(response.body));
+    } else {
+      final error = jsonDecode(response.body);
+      throw Exception(error['message'] ?? 'pin reset failed');
+    }
+  }
+
   // Create a Customer
   Future<Customers> createCustomer(
     String firstName,

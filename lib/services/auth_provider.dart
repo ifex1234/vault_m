@@ -100,6 +100,14 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
+  Future<void> resetPin(String oldPin, String newPin) async {
+    try {
+      await _apiService.resetPin(oldPin, newPin);
+    } catch (e) {
+      rethrow; // Re-throw to handle error in UI
+    }
+  }
+
   Future<void> logout() async {
     _token = null;
     _currentUser = null;

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:vault_m/components/obsure_field.dart';
+import 'package:vault_m/components/plain_field.dart';
 import 'package:vault_m/routes/login.dart';
 import 'package:vault_m/services/auth_provider.dart';
 import 'package:provider/provider.dart';
@@ -89,16 +91,11 @@ class RegistrationPage extends StatelessWidget {
           width: 320,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               Text(
-                'Vault Mobile',
-                style: TextStyle(fontSize: 50, fontWeight: FontWeight.w500),
-              ),
-
-              Text(
-                'Register to get started',
-                style: TextStyle(fontSize: 25, fontWeight: FontWeight.w400),
+                'Welcome to Vault Mobile',
+                style: TextStyle(fontSize: 25, fontWeight: FontWeight.w500),
               ),
 
               FormWidget(),
@@ -122,6 +119,7 @@ class _FormWidgetState extends State<FormWidget> {
   bool _isEmailValid = true;
   bool _isNameValid = true;
   bool _isPinValid = true;
+  bool _isPasswordValid = true;
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _firstNameController = TextEditingController();
@@ -161,34 +159,6 @@ class _FormWidgetState extends State<FormWidget> {
       }
     }
   }
-
-  // Future<FormData> createUser() async {
-  //   final response = await http.post(
-  //     Uri.parse('https://vault-server-wnbz.onrender.com/auth/register'),
-  //     headers: <String, String>{
-  //       'Content-Type': 'application/json; charset=UTF-8',
-  //     },
-  //     body: jsonEncode(<String, String>{
-  //       'password': _passwordController.text,
-  //       'firstName': _firstNameController.text,
-  //       'lastName': _lastNameController.text,
-  //       'email': _emailController.text,
-  //       'pin': _pinController.text,
-  //     }),
-  //   );
-
-  //   if (response.statusCode == 201) {
-  //     // If the server did return a 201 CREATED response,
-  //     // then parse the JSON.
-  //     return FormData.fromJson(
-  //       jsonDecode(response.body) as Map<String, dynamic>,
-  //     );
-  //   } else {
-  //     // If the server did not return a 201 CREATED response,
-  //     // then throw an exception.
-  //     throw Exception('Failed to create user.');
-  //   }
-  // }
 
   String? _validateEmail(String? value) {
     if (value == null || value.isEmpty) {
@@ -247,8 +217,16 @@ class _FormWidgetState extends State<FormWidget> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              TextFormField(
+              Text(
+                'Register to get started',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
+              ),
+              SizedBox(height: 15),
+
+              PlainField(
                 controller: _emailController,
+                labelText: 'Email',
+                hintText: 'Enter your email',
                 validator: (value) {
                   final error = _validateEmail(value);
                   setState(() {
@@ -256,32 +234,14 @@ class _FormWidgetState extends State<FormWidget> {
                   });
                   return error;
                 },
-
-                onSaved: (val) {
-                  _emailController.text = val!;
-                },
-                keyboardType: TextInputType.emailAddress,
-                decoration: InputDecoration(
-                  hintText: 'Enter your email',
-                  labelText: 'Email',
-                  filled: true,
-                  border: UnderlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  errorBorder: _isEmailValid
-                      ? null // Use default error border when valid
-                      : const UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.red, width: 4.0),
-                        ),
-                  fillColor: const Color.fromARGB(255, 241, 223, 245),
-                  suffixIcon: !_isEmailValid
-                      ? const Icon(Icons.error, color: Colors.red)
-                      : null,
-                ),
+                isInputValid: _isEmailValid,
               ),
               SizedBox(height: 5),
-              TextFormField(
+
+              PlainField(
                 controller: _firstNameController,
+                labelText: 'First name',
+                hintText: 'Enter your first name',
                 validator: (value) {
                   final error = _validateName(value);
                   setState(() {
@@ -289,31 +249,14 @@ class _FormWidgetState extends State<FormWidget> {
                   });
                   return error;
                 },
-
-                onSaved: (val) {
-                  _firstNameController.text = val!;
-                },
-                decoration: InputDecoration(
-                  hintText: 'Enter your first name',
-                  labelText: 'First Name',
-                  filled: true,
-                  border: UnderlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  errorBorder: _isNameValid
-                      ? null // Use default error border when valid
-                      : const UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.red, width: 4.0),
-                        ),
-                  fillColor: const Color.fromARGB(255, 241, 223, 245),
-                  suffixIcon: !_isNameValid
-                      ? const Icon(Icons.error, color: Colors.red)
-                      : null,
-                ),
+                isInputValid: _isNameValid,
               ),
               SizedBox(height: 5),
-              TextFormField(
+
+              PlainField(
                 controller: _lastNameController,
+                labelText: 'Last name',
+                hintText: 'Enter your last name',
                 validator: (value) {
                   final error = _validateName(value);
                   setState(() {
@@ -321,32 +264,13 @@ class _FormWidgetState extends State<FormWidget> {
                   });
                   return error;
                 },
-
-                onSaved: (val) {
-                  _lastNameController.value = val! as TextEditingValue;
-                },
-                decoration: InputDecoration(
-                  hintText: 'Enter your last name',
-                  labelText: 'Last Name',
-                  filled: true,
-                  border: UnderlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  errorBorder: _isNameValid
-                      ? null // Use default error border when valid
-                      : const UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.red, width: 4.0),
-                        ),
-                  fillColor: const Color.fromARGB(255, 241, 223, 245),
-                  suffixIcon: !_isNameValid
-                      ? const Icon(Icons.error, color: Colors.red)
-                      : null,
-                ),
+                isInputValid: _isNameValid,
               ),
               SizedBox(height: 5),
-              TextFormField(
+              ObscuredField2(
                 controller: _pinController,
-                obscureText: true,
+                labelText: 'Pin',
+                hintText: "enter pin",
                 validator: (value) {
                   final error = _validatePin(value);
                   setState(() {
@@ -354,32 +278,13 @@ class _FormWidgetState extends State<FormWidget> {
                   });
                   return error;
                 },
-
-                onSaved: (val) {
-                  _pinController.text = val!;
-                },
-                decoration: InputDecoration(
-                  hintText: 'Enter your pin',
-                  labelText: 'Pin',
-                  filled: true,
-                  border: UnderlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  errorBorder: _isPinValid
-                      ? null // Use default error border when valid
-                      : const UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.red, width: 4.0),
-                        ),
-                  fillColor: const Color.fromARGB(255, 241, 223, 245),
-                  suffixIcon: !_isPinValid
-                      ? const Icon(Icons.error, color: Colors.red)
-                      : null,
-                ),
+                isInputValid: _isPinValid,
               ),
-              SizedBox(height: 5),
-              TextFormField(
+              SizedBox(height: 12),
+              ObscuredField2(
                 controller: _passwordController,
-                obscureText: true,
+                labelText: 'password',
+                hintText: 'Enter your password',
                 validator: (value) {
                   if (value != null && value.isEmpty == false) {
                     return null;
@@ -388,65 +293,9 @@ class _FormWidgetState extends State<FormWidget> {
                   }
                   return 'Not a valid password.';
                 },
-                onSaved: (val) {
-                  _passwordController.text = val!;
-                },
-                decoration: const InputDecoration(
-                  hintText: 'Enter your password',
-                  labelText: 'Password',
-                  filled: true,
-                  fillColor: Color.fromARGB(255, 241, 223, 245),
-                ),
+                isInputValid: _isPasswordValid,
               ),
-              // TextFormField(
-              //   obscureText: _obscurePassword, // Control text obscuring
-              //   decoration: InputDecoration(
-              //     labelText: 'Password',
-              //     hintText: 'Enter your password',
-              //     border: const OutlineInputBorder(),
-              //     // Error icon for password field
-              //     suffixIcon: Row(
-              //       mainAxisSize: MainAxisSize.min, // Keep row tight
-              //       children: [
-              //         if (!_isPasswordValid)
-              //           const Icon(Icons.error, color: Colors.red),
-              //         // Toggle password visibility icon
-              //         IconButton(
-              //           icon: Icon(
-              //             _obscurePassword
-              //                 ? Icons.visibility
-              //                 : Icons.visibility_off,
-              //           ),
-              //           onPressed: () {
-              //             setState(() {
-              //               _obscurePassword = !_obscurePassword;
-              //             });
-              //           },
-              //         ),
-              //       ],
-              //     ),
-              //     errorBorder: _isPasswordValid
-              //         ? null
-              //         : const OutlineInputBorder(
-              //             borderSide: BorderSide(color: Colors.red),
-              //           ),
-              //   ),
-              //   onChanged: (value) {
-              //     setState(() {
-              //       _isPasswordValid = _validatePassword(value) == null;
-              //     });
-              //   },
-              //   validator: (value) {
-              //     final error = _validatePassword(value);
-              //     setState(() {
-              //       _isPasswordValid = error == null;
-              //     });
-              //     return error;
-              //   },
-              //   onSaved: (value) {
-              //     _password = value;
-              //   },
-              // ),
+
               Padding(
                 padding: const EdgeInsets.only(top: 10.0),
                 child: Column(

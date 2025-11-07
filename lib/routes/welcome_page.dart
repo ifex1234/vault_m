@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:vault_m/components/avatar.dart';
-import 'package:vault_m/routes/password_reset.dart';
 import 'package:vault_m/services/auth_provider.dart';
 import 'package:provider/provider.dart';
 import 'dart:async';
@@ -13,6 +12,7 @@ class WelcomePage extends StatelessWidget {
     return Scaffold(
       body: Center(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Padding(
               padding: const EdgeInsets.only(top: 20.0, bottom: 10.0),
@@ -25,7 +25,7 @@ class WelcomePage extends StatelessWidget {
             ),
             SizedBox(height: 10),
             Text('ifechukwu peter', style: TextStyle(fontSize: 20)),
-            SizedBox(height: 40),
+            SizedBox(height: 20),
             NumberPadWithBadge(
               buttonColor: Color.fromARGB(255, 241, 223, 245),
               textColor: const Color.fromARGB(255, 36, 35, 35),
@@ -56,7 +56,7 @@ class NumberPadWithBadge extends StatefulWidget {
     this.buttonColor,
     this.textColor,
     this.badgeColor,
-    this.badgeHeight = 60.0,
+    this.badgeHeight = 40.0,
     this.maxInputLength = 10,
   });
 
@@ -137,6 +137,7 @@ class _NumberPadWithBadgeState extends State<NumberPadWithBadge> {
         Container(
           height: widget.badgeHeight,
           width: 150,
+
           margin: const EdgeInsets.all(8.0),
           decoration: BoxDecoration(
             color: badgeDefaultColor,
@@ -144,7 +145,7 @@ class _NumberPadWithBadgeState extends State<NumberPadWithBadge> {
             border: Border.all(color: theme.dividerColor.withOpacity(0.5)),
           ),
           alignment: Alignment.centerRight,
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          padding: const EdgeInsets.symmetric(horizontal: 10.0),
           child: Center(
             child: FittedBox(
               fit: BoxFit.scaleDown,
@@ -166,15 +167,16 @@ class _NumberPadWithBadgeState extends State<NumberPadWithBadge> {
 
         SizedBox(
           width: 250,
+          height: 200,
           child: GridView.builder(
             shrinkWrap: true, // Important for fitting inside Column/ScrollView
             physics:
                 const NeverScrollableScrollPhysics(), // Disable grid scrolling
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 3,
-              childAspectRatio: 2.0,
-              crossAxisSpacing: 15.0,
-              mainAxisSpacing: 20.0,
+              childAspectRatio: 1.0,
+              crossAxisSpacing: 30.0,
+              mainAxisSpacing: 10.0,
             ),
             itemCount: 9, // Numbers 1 through 9
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -185,25 +187,25 @@ class _NumberPadWithBadgeState extends State<NumberPadWithBadge> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: buttonDefaultColor,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(38.0),
+                    borderRadius: BorderRadius.circular(28.0),
                   ),
                   padding: EdgeInsets.symmetric(vertical: 15),
                 ),
                 child: Text(
                   '$number',
                   style: TextStyle(
-                    fontSize: 16.0,
+                    fontSize: 18.0,
                     fontWeight: FontWeight.bold,
-                    color: textDefaultColor,
+                    color: Colors.black,
                   ),
                 ),
               );
             },
           ),
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: 10),
 
-        // Row for 0, Backspace, and Clear buttons
+        // Row for 0 and Backspace
         SizedBox(
           width: 250,
           child: Padding(
@@ -279,7 +281,7 @@ class _NumberPadWithBadgeState extends State<NumberPadWithBadge> {
             ),
           ),
         ),
-        const SizedBox(height: 50),
+        const SizedBox(height: 20),
 
         ElevatedButton(
           onPressed: _unlock,
