@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vault_m/routes/change_pin.dart';
+import 'package:vault_m/routes/customers.dart';
 import 'package:vault_m/services/auth_provider.dart';
 
 class HomePage extends StatefulWidget {
@@ -148,7 +149,12 @@ class _HomePageState extends State<HomePage> {
                           Icon(Icons.person_2_outlined),
                           SizedBox(width: 10),
                           InkWell(
-                            onTap: null,
+                            onTap: () => Navigator.push(
+                              context,
+                              (MaterialPageRoute(
+                                builder: (context) => CustomersHomeScreen(),
+                              )),
+                            ),
                             child: Text(
                               'customers',
                               style: TextStyle(fontSize: 16),

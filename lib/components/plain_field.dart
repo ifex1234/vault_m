@@ -49,16 +49,16 @@ class PlainField2 extends StatefulWidget {
   final TextEditingController controller;
   final String labelText;
   final String hintText;
-  final FormFieldValidator<String> validator;
-  final bool isInputValid;
+  final FormFieldValidator<String>? validator;
+  final bool? isInputValid;
 
   const PlainField2({
     super.key,
     required this.controller,
     required this.labelText,
     required this.hintText,
-    required this.validator,
-    required this.isInputValid,
+    this.validator,
+    this.isInputValid,
   });
 
   @override
@@ -76,12 +76,12 @@ class _PlainFieldState2 extends State<PlainField2> {
         filled: true,
         fillColor: const Color.fromARGB(255, 241, 223, 245),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0)),
-        errorBorder: widget.isInputValid
+        errorBorder: widget.isInputValid!
             ? null // Use default error border when valid
             : const OutlineInputBorder(
                 borderSide: BorderSide(color: Colors.red, width: 4.0),
               ),
-        suffixIcon: !widget.isInputValid
+        suffixIcon: !widget.isInputValid!
             ? const Icon(Icons.error, color: Colors.red)
             : null,
       ),

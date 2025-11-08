@@ -1,5 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 import 'package:flutter/material.dart';
+import 'package:vault_m/routes/customers.dart';
 import 'package:vault_m/routes/home.dart';
 import 'package:vault_m/routes/login.dart';
 import 'package:vault_m/routes/register.dart';
@@ -42,16 +43,19 @@ class MyApp extends StatelessWidget {
                   if (Navigator.of(context).canPop()) {
                     Navigator.of(context).popUntil((route) => route.isFirst);
                   }
-                  Navigator.of(context).pushReplacementNamed('/register');
+                  Navigator.of(context).pushReplacementNamed('/customers');
                 }
               });
               return const Scaffold(
                 body: Center(child: CircularProgressIndicator()),
               );
             }
+            // return authProvider.isAuthenticated
+            //     ? const WelcomePage()
+            //     : const RegistrationPage();
             return authProvider.isAuthenticated
-                ? const WelcomePage()
-                : const RegistrationPage();
+                ? const CustomersHomeScreen()
+                : const CustomersHomeScreen();
           },
         ),
         routes: {
@@ -59,6 +63,7 @@ class MyApp extends StatelessWidget {
           '/register': (context) => const RegistrationPage(),
           '/welcome': (context) => const WelcomePage(),
           '/home': (context) => const HomePage(),
+          '/customers': (context) => const CustomersHomeScreen(),
           // '/create-customer': (context) => const CreateCustomerPage(),
         },
       ),
@@ -67,8 +72,7 @@ class MyApp extends StatelessWidget {
 }
 
 // import 'package:flutter/material.dart';
-// import 'package:vault_m/routes/password_reset.dart';
-// import 'package:vault_m/routes/welcome_page.dart';
+// import 'package:vault_m/routes/home.dart';
 
 // void main() {
 //   runApp(const MyApp());
@@ -84,7 +88,7 @@ class MyApp extends StatelessWidget {
 //         primarySwatch: Colors.deepPurple,
 //         visualDensity: VisualDensity.adaptivePlatformDensity,
 //       ),
-//       home: const WelcomePage(),
+//       home: const HomePage(),
 //     );
 //   }
 // }

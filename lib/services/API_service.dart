@@ -164,32 +164,26 @@ class ApiService {
     }
   }
 
-  // Get My Posts
-  //   Future<List<Customers>> fetchMyPosts(String token) async {
-  //     final response = await _makeAuthenticatedRequest(
-  //       'posts/my-posts',
-  //       'GET',
-  //       token,
-  //     );
-  //     if (response.statusCode == 200) {
-  //       List<dynamic> data = jsonDecode(response.body);
-  //       return data.map((json) => Post.fromJson(json)).toList();
-  //     } else {
-  //       final error = jsonDecode(response.body);
-  //       throw Exception(error['message'] ?? 'Failed to fetch my posts');
-  //     }
-  //   }
+  Future<List<Customers>> fetchCustomers(String token) async {
+    final response = await _makeAuthenticatedRequest('customers', 'GET', token);
+    if (response.statusCode == 200) {
+      List<dynamic> data = jsonDecode(response.body);
+      return data.map((json) => Customers.fromJson(json)).toList();
+    } else {
+      final error = jsonDecode(response.body);
+      throw Exception(error['message'] ?? 'Failed to fetch cutomers');
+    }
+  }
 
-  // Get All Posts (public, only published posts are returned by NestJS)
   Future<List<User>> fetchAllUsers() async {
-    final response = await http.get(Uri.parse('$_baseUrl/posts'));
+    final response = await http.get(Uri.parse('$_baseUrl/auth/users'));
 
     if (response.statusCode == 200) {
       List<dynamic> data = jsonDecode(response.body);
       return data.map((json) => User.fromJson(json)).toList();
     } else {
       final error = jsonDecode(response.body);
-      throw Exception(error['message'] ?? 'Failed to fetch all posts');
+      throw Exception(error['message'] ?? 'Failed to fetch all users');
     }
   }
 
