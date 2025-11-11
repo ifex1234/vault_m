@@ -34,11 +34,14 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
+  camera: ^0.10.5+9 # Use the latest stable version
+  path_provider: ^2.1.1
   http: ^1.5.0
   provider: ^6.1.1 # For state management
   shared_preferences: ^2.2.2 # For persisting the JWT token
   flutter_secure_storage: ^9.0.0 # More secure storage for sensitive data like JWT
   jwt_decoder: ^2.0.1
+  intl: ^0.18.1
 
 dev_dependencies:
   flutter_test:

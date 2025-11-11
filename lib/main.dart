@@ -7,8 +7,16 @@ import 'package:vault_m/routes/register.dart';
 import 'package:provider/provider.dart';
 import 'package:vault_m/routes/welcome_page.dart';
 import 'package:vault_m/services/auth_provider.dart';
+import 'package:camera/camera.dart';
 
-void main() {
+// void main() {
+
+//   runApp(const MyApp());
+// }
+late List<CameraDescription> cameras;
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  cameras = await availableCameras();
   runApp(const MyApp());
 }
 
