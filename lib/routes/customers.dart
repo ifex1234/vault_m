@@ -26,7 +26,10 @@ class _CustomersHomeScreenState extends State<CustomersHomeScreen> {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     if (authProvider.isAuthenticated && authProvider.token != null) {
       setState(() {
-        _mycustomersFuture = ApiService().fetchCustomers(authProvider.token!);
+        _mycustomersFuture = ApiService().fetchCustomers(
+          authProvider.token!,
+          24,
+        );
       });
     } else {
       // Handle case where not authenticated, perhaps navigate to login
@@ -72,10 +75,14 @@ class _CustomersHomeScreenState extends State<CustomersHomeScreen> {
               return Center(child: Text('Error: ${snapshot.error}'));
             } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
               return Center(
-                // child: Text('You have not created any customers yet.'),
+                child: Text('You have not created any customers yet.'),
+              );
+            } else {
+              return Center(
                 child: ListView.builder(
-                  itemCount: 5,
+                  itemCount: snapshot.data?.length,
                   itemBuilder: (context, index) {
+                    final data = snapshot.data![index];
                     return Center(
                       child: InkWell(
                         onTap: () => Navigator.push(
@@ -114,7 +121,7 @@ class _CustomersHomeScreenState extends State<CustomersHomeScreen> {
                                     // color: const Color.fromARGB(255, 241, 223, 245),
                                     width: 200,
                                     child: Text(
-                                      'helllllllllooooo',
+                                      data.firstName,
                                       style: TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.bold,
@@ -137,60 +144,13 @@ class _CustomersHomeScreenState extends State<CustomersHomeScreen> {
                   },
                 ),
               );
-            } else {
-              return ListView.builder(
-                itemCount: snapshot.data!.length,
-                itemBuilder: (context, index) {
-                  final post = snapshot.data![index];
-                  return Card(
-                    margin: const EdgeInsets.all(8.0),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            post.lastName,
-                            style: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          if (post.address != null &&
-                              post.customerAddress!.isNotEmpty)
-                            Padding(
-                              padding: const EdgeInsets.only(top: 8.0),
-                              child: Text(
-                                post.customerBusinessAddress!,
-                                style: const TextStyle(fontSize: 16),
-                              ),
-                            ),
-                          const SizedBox(height: 8),
-
-                          const SizedBox(height: 4),
-                          Align(
-                            alignment: Alignment.bottomRight,
-                            child: Text(
-                              'Created: ${post.createdAt.toLocal().toString().split(' ')[0]}',
-                              style: const TextStyle(
-                                fontSize: 12,
-                                color: Colors.grey,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                },
-              );
             }
           },
         ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          final result = await Navigator.of(context).pushNamed('/create-post');
+          final result = await Navigator.of(context).pushNamed('/create');
           if (result == true) {
             _refreshList(); // Refresh posts if a new post was created
           }

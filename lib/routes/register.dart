@@ -6,77 +6,6 @@ import 'package:vault_m/services/auth_provider.dart';
 import 'package:provider/provider.dart';
 import 'dart:async';
 
-// class FormData {
-//   final String email;
-//   final String password;
-//   final String firstName;
-//   final String lastName;
-//   final String pin;
-
-//   const FormData({
-//     required this.password,
-//     required this.email,
-//     required this.firstName,
-//     required this.lastName,
-//     required this.pin,
-//   });
-
-//   factory FormData.fromJson(Map<String, dynamic> json) {
-//     return switch (json) {
-//       {
-//         'email': String email,
-//         'password': String password,
-//         'firstName': String firstName,
-//         'lastName': String lastName,
-//         'pin': dynamic pin,
-//       } =>
-//         FormData(
-//           email: email,
-//           password: password,
-//           firstName: firstName,
-//           lastName: lastName,
-//           pin: pin?.toString() ?? '',
-//         ),
-//       _ => throw const FormatException('Failed to load FormData.'),
-//     };
-//   }
-// }
-
-// Future<FormData> createUser(
-//   String title,
-//   String firstName,
-//   String lastName,
-//   String email,
-//   String pin,
-// ) async {
-//   final response = await http.post(
-//     Uri.parse('http://192.168.43.133:5347/auth/register'),
-//     headers: <String, String>{
-//       'Content-Type': 'application/json; charset=UTF-8',
-//     },
-//     body: jsonEncode(<String, String>{
-//       'title': title,
-//       'firstName': firstName,
-//       'lastName': lastName,
-//       'email': email,
-//       'pin': pin,
-//     }),
-//   );
-
-//   if (response.statusCode == 201) {
-//     print('Server Response Body: ${response.body}');
-//     // If the server did return a 201 CREATED response,
-//     // then parse the JSON.
-//     return FormData.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
-//   } else {
-//     // If the server did not return a 201 CREATED response,
-//     // then throw an exception.
-//     throw Exception(
-//       'Failed to create user. Status Code: ${response.statusCode}, Body: ${response.body}',
-//     ); // More info on error
-//   }
-// }
-
 class RegistrationPage extends StatelessWidget {
   const RegistrationPage({super.key});
 
@@ -140,13 +69,12 @@ class _FormWidgetState extends State<FormWidget> {
           _passwordController.text,
           _firstNameController.text,
           _lastNameController.text,
-          _pinController.text,
+          pin: _pinController.text.isNotEmpty ? _pinController.text : null,
         );
+
+        Navigator.of(context).pushReplacementNamed('/home');
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Registration successful!')),
-        );
-        Navigator.of(context).pushReplacementNamed(
-          '/home',
         ); // Navigate to welcome page after successful registration
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -184,15 +112,14 @@ class _FormWidgetState extends State<FormWidget> {
   }
 
   String? _validatePin(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Please enter your pin';
+    {
+      if (value != null && value.isNotEmpty) {
+        if (value.length != 4 || !RegExp(r'^[0-9]+$').hasMatch(value)) {
+          return 'PIN must be exactly 4 digits';
+        }
+      }
+      return null; // PIN is optional
     }
-    // Basic email validation regex
-    final int length = 4;
-    if (value.length < length || value.length > length) {
-      return 'pin must be $length digits';
-    }
-    return null; // Return null if the pin is valid
   }
 
   @override

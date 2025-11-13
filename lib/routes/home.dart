@@ -107,7 +107,12 @@ class _HomePageState extends State<HomePage> {
                             Icon(Icons.delete, color: Colors.redAccent),
                             SizedBox(width: 10),
                             InkWell(
-                              onTap: _logout,
+                              onTap: () async {
+                                await Provider.of<AuthProvider>(
+                                  context,
+                                  listen: false,
+                                ).logout();
+                              },
                               child: Text(
                                 'Sign out',
                                 style: TextStyle(

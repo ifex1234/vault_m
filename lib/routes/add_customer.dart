@@ -68,10 +68,8 @@ class _FormWidgetState extends State<FormWidget> {
   DateTime? _dob;
   String? _selectedUserGender;
   final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
-  final _pinController = TextEditingController();
   final _street = TextEditingController();
   final _street2 = TextEditingController();
   final _bStop = TextEditingController();
@@ -100,37 +98,6 @@ class _FormWidgetState extends State<FormWidget> {
   String _verifyBizAddress() {
     return _customerBusinessAddress =
         "$_street $_street2  $_area  $_bStop  $_state";
-  }
-
-  Future<void> _register() async {
-    if (_formKey.currentState!.validate()) {
-      setState(() {
-        _isLoading = true;
-      });
-      try {
-        await Provider.of<AuthProvider>(context, listen: false).register(
-          _emailController.text,
-          _passwordController.text,
-          _firstNameController.text,
-          _lastNameController.text,
-          _pinController.text,
-        );
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Registration successful!')),
-        );
-        Navigator.of(context).pushReplacementNamed(
-          '/home',
-        ); // Navigate to welcome page after successful registration
-      } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Registration failed: ${e.toString()}')),
-        );
-      } finally {
-        setState(() {
-          _isLoading = false;
-        });
-      }
-    }
   }
 
   @override
@@ -487,7 +454,7 @@ class _FormWidgetState extends State<FormWidget> {
                           ? CircularProgressIndicator()
                           : ElevatedButton(
                               onPressed: () {
-                                _register();
+                                // _register();
                               },
                               style: ElevatedButton.styleFrom(
                                 minimumSize: Size(200, 50),

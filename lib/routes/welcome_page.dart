@@ -4,34 +4,46 @@ import 'package:vault_m/services/auth_provider.dart';
 import 'package:provider/provider.dart';
 import 'dart:async';
 
-class WelcomePage extends StatelessWidget {
+class WelcomePage extends StatefulWidget {
   const WelcomePage({super.key});
 
+  @override
+  State<WelcomePage> createState() => _WelcomePageState();
+}
+
+class _WelcomePageState extends State<WelcomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 20.0, bottom: 10.0),
-              child: AvatarWidget(initials: 'VM'),
-            ),
+        child: Consumer<AuthProvider>(
+          builder: (context, authProvider, child) {
+            final firstName = authProvider.currentUser?.firstName ?? 'John';
+            final lastName = authProvider.currentUser?.firstName ?? 'Doe';
 
-            const Text(
-              'Welcome back!',
-              style: TextStyle(fontSize: 28, fontWeight: FontWeight.w600),
-            ),
-            SizedBox(height: 10),
-            Text('ifechukwu peter', style: TextStyle(fontSize: 20)),
-            SizedBox(height: 20),
-            NumberPadWithBadge(
-              buttonColor: Color.fromARGB(255, 241, 223, 245),
-              textColor: const Color.fromARGB(255, 36, 35, 35),
-              confirmButtonText: 'Unlock',
-            ),
-          ],
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 20.0, bottom: 10.0),
+                  child: AvatarWidget(initials: 'VM'),
+                ),
+
+                const Text(
+                  'Welcome back!',
+                  style: TextStyle(fontSize: 28, fontWeight: FontWeight.w600),
+                ),
+                SizedBox(height: 10),
+                Text('$firstName $lastName', style: TextStyle(fontSize: 20)),
+                SizedBox(height: 20),
+                NumberPadWithBadge(
+                  buttonColor: Color.fromARGB(255, 241, 223, 245),
+                  textColor: const Color.fromARGB(255, 36, 35, 35),
+                  confirmButtonText: 'Unlock',
+                ),
+              ],
+            );
+          },
         ),
       ),
     );
@@ -76,13 +88,33 @@ class _NumberPadWithBadgeState extends State<NumberPadWithBadge> {
     }
   }
 
+  // void _unlockh() async {
+  //   if (_formKey.currentState!.validate()) {
+  //     final authProvider = Provider.of<AuthProvider>(context, listen: false);
+  //     try {
+  //       final success = await authProvider.verifyPin(_currentInput);
+  //       if (success) {
+  //         // PIN verified, AuthProvider will notify, and main app will navigate
+  //       } else {
+  //         ScaffoldMessenger.of(context).showSnackBar(
+  //           const SnackBar(content: Text('Invalid PIN. Please try again.')),
+  //         );
+  //       }
+  //     } catch (e) {
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         SnackBar(content: Text('PIN verification failed: ${e.toString()}')),
+  //       );
+  //     }
+  //   }
+  // }
+
   Future<void> _unlock() async {
     try {
       final data = await Provider.of<AuthProvider>(
         context,
         listen: false,
-      ).loadUserDetails();
-      if (_currentInput == data?.pin) {
+      ).verifyPin(_currentInput);
+      if (data) {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(const SnackBar(content: Text('Welcome')));

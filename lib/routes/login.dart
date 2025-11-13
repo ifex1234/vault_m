@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:vault_m/components/obsure_field.dart';
 import 'package:vault_m/components/plain_field.dart';
