@@ -155,18 +155,19 @@ class ApiService {
     }
   }
 
-  Future<User> resetPassword(String email, String password) async {
+  Future<String> resetPassword(String email, String password) async {
     final response = await http.put(
-      Uri.parse('$_baseUrl/auth/update-password'),
+      Uri.parse('$_baseUrl/auth/reset-password'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({'email': email, 'password': password}),
     );
 
-    if (response.statusCode == 201) {
-      return User.fromJson(jsonDecode(response.body));
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      return data['message'];
     } else {
       final error = jsonDecode(response.body);
-      throw Exception(error['message'] ?? 'password reset failed');
+      throw Exception(error['messagewww'] ?? 'password reset failed');
     }
   }
 
@@ -211,53 +212,86 @@ class ApiService {
     }
   }
 
-  // Create a Customer
   Future<Customers> createCustomer(
+    String token,
     String firstName,
     String lastName,
     String email,
-    String address,
-    String otherName,
     String customerAddress,
     String customerBusinessAddress,
     int phoneNumber,
+    int phoneNumber2,
     int BVN,
     int NIN,
-    String customerDOB,
+    // Gender gender,
+    DateTime customerDob,
     String utilityBillUrl,
     String identificationUrl,
-    String creatorEmail,
-    String token,
   ) async {
-    final response = await _makeAuthenticatedRequest(
-      'customers',
-      'POST',
-      token,
-      body: {
-        'firstName': firstName,
-        'lastName': lastName,
-        'email': email,
-        'address': address,
-        'otherName': otherName,
-        'customerAddress': customerAddress,
-        'customerBusinessAddress': customerBusinessAddress,
-        'phoneNumber': phoneNumber,
-        'BVN': BVN,
-        'NIN': NIN,
-        'customerDOB': customerDOB,
-        'utilityBillUrl': utilityBillUrl,
-        'identificationUrl': identificationUrl,
-        'creatorEmail': creatorEmail,
-      },
-    );
-
-    if (response.statusCode == 201) {
-      return Customers.fromJson(jsonDecode(response.body));
-    } else {
-      final error = jsonDecode(response.body);
-      throw Exception(error['message'] ?? 'Failed to create Customer');
-    }
+    final responseData = await _post('customers/create-customer', {
+      'title': firstName,
+      'content': lastName,
+      'lastName': lastName,
+      'email': email,
+      'customerAddress': customerAddress,
+      'customerBusinessAddress': customerBusinessAddress,
+      'phoneNumber': phoneNumber,
+      'phoneNumber2': phoneNumber2,
+      'BVN': BVN,
+      'NIN': NIN,
+      // 'gender': gender,
+      'customerDob': customerDob,
+      'utilityBillUrl': utilityBillUrl,
+      'identificationUrl': identificationUrl,
+    }, token: token);
+    return Customers.fromJson(responseData);
   }
+
+  // Create a Customer
+  // Future<Customers> createCustomer(
+  //   String firstName,
+  //   String lastName,
+  //   String email,
+  //   String customerAddress,
+  //   String customerBusinessAddress,
+  //   int phoneNumber,
+  //   int phoneNumber2,
+  //   int BVN,
+  //   int NIN,
+  //   DateTime customerDOB,
+  //   String utilityBillUrl,
+  //   String identificationUrl,
+  //   final User? creatorId,
+  //   String token,
+  // ) async {
+  //   final response = await _makeAuthenticatedRequest(
+  //     'customers/create-customer',
+  //     'POST',
+  //     token,
+  //     body: {
+  //       'firstName': firstName,
+  //       'lastName': lastName,
+  //       'email': email,
+  //       'customerAddress': customerAddress,
+  //       'customerBusinessAddress': customerBusinessAddress,
+  //       'phoneNumber': phoneNumber,
+  //       'phoneNumber2': phoneNumber2,
+  //       'BVN': BVN,
+  //       'NIN': NIN,
+  //       'customerDOB': customerDOB,
+  //       'utilityBillUrl': utilityBillUrl,
+  //       'identificationUrl': identificationUrl,
+  //       'creatorId': creatorId,
+  //     },
+  //   );
+
+  //   if (response.statusCode == 201) {
+  //     return Customers.fromJson(jsonDecode(response.body));
+  //   } else {
+  //     final error = jsonDecode(response.body);
+  //     throw Exception(error['message'] ?? 'Failed to create Customer');
+  //   }
+  // }
 
   Future<List<Customers>> fetchCustomers(String token, int id) async {
     final response = await _makeAuthenticatedRequest(

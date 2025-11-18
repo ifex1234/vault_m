@@ -37,6 +37,22 @@ class _CustomersHomeScreenState extends State<CustomersHomeScreen> {
     }
   }
 
+  // void _loadPosts() {
+  //   final authProvider = Provider.of<AuthProvider>(context, listen: false);
+  //   if (authProvider.token != null) {
+  //     setState(() {
+  //       _postsFuture = _apiService.fetchAllPosts(authProvider.token!);
+  //     });
+  //   } else {
+  //     // If no token, return an empty list or handle as an error
+  //     setState(() {
+  //       _postsFuture = Future.value(
+  //         [],
+  //       ); // Or Future.error('Not authenticated');
+  //     });
+  //   }
+  // }
+
   Future<void> _refreshList() async {
     await _loadMyCustomers();
   }
@@ -52,9 +68,10 @@ class _CustomersHomeScreenState extends State<CustomersHomeScreen> {
           IconButton(icon: const Icon(Icons.refresh), onPressed: _refreshList),
           IconButton(
             icon: const Icon(Icons.add),
-            onPressed: () async {
-              await authProvider.logout();
-            },
+            onPressed: () => Navigator.push(
+              context,
+              (MaterialPageRoute(builder: (context) => AddCustomerPage())),
+            ),
           ),
           IconButton(
             icon: const Icon(Icons.search),
@@ -147,15 +164,6 @@ class _CustomersHomeScreenState extends State<CustomersHomeScreen> {
             }
           },
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          final result = await Navigator.of(context).pushNamed('/create');
-          if (result == true) {
-            _refreshList(); // Refresh posts if a new post was created
-          }
-        },
-        child: const Icon(Icons.add),
       ),
     );
   }

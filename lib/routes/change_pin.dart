@@ -37,9 +37,7 @@ class _ChangePinState extends State<ChangePin> {
             ),
           ),
         );
-        Navigator.of(context).pushReplacementNamed(
-          '/login',
-        ); // Navigate to login after successful registration
+        Navigator.of(context).pushReplacementNamed('/login');
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('pin reset failed: ${e.toString()}')),
@@ -66,7 +64,7 @@ class _ChangePinState extends State<ChangePin> {
     if (value.length != 4) {
       return 'Pin must not be less than or greater than 4 long';
     }
-    return null; // Return null if the password is valid
+    return null;
   }
 
   String? _validateConfirmPin(String? value) {
@@ -76,14 +74,13 @@ class _ChangePinState extends State<ChangePin> {
     if (value != _newPinController.text) {
       return 'Pins do not match';
     }
-    return null; // Return null if the confirm password is valid
+    return null;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        // leading: ,
         title: const Text('Change pin'),
         backgroundColor: const Color.fromARGB(255, 252, 232, 252),
       ),

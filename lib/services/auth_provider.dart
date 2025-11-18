@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:vault_m/models/customers.dart';
 import 'package:vault_m/models/users.dart';
 import 'package:vault_m/services/api_service.dart';
 
@@ -54,7 +55,6 @@ class AuthProvider extends ChangeNotifier {
     _token = await _storage.read(key: 'jwt_token');
     if (_token != null && !JwtDecoder.isExpired(_token!)) {
       _isAuthenticated = true;
-      // You can decode the token to get basic user info like email or id if needed
       Map<String, dynamic> decodedToken = JwtDecoder.decode(_token!);
       final currentUser = User(
         id: decodedToken['sub'],
@@ -67,31 +67,13 @@ class AuthProvider extends ChangeNotifier {
       ); // Placeholder
       return currentUser;
     } else {
-      _token = null; // Token expired or not found
+      _token = null;
       _isAuthenticated = false;
-      await _storage.delete(key: 'jwt_token'); // Clear invalid token
+      await _storage.delete(key: 'jwt_token');
     }
     notifyListeners();
     throw Exception('No valid token available');
   }
-
-  // Future loadUserDetails() async {
-  //   if (_token != null) {
-  //     try {
-  //       _currentUser = await _apiService.getUserDetails(_token!);
-
-  //       notifyListeners();
-  //       return _currentUser;
-  //     } catch (e) {
-  //       // Handle error, possibly invalid token
-  //       _token = null;
-  //       _isAuthenticated = false;
-  //       _currentUser = null;
-  //       await _secureStorage.delete(key: 'jwt_token');
-  //       notifyListeners();
-  //     }
-  //   }
-  // }
 
   // Future<void> login(String email, String password) async {
   //   _isLoading = true;
@@ -118,13 +100,32 @@ class AuthProvider extends ChangeNotifier {
       _token = newToken;
       await _storage.write(key: 'jwt_token', value: _token);
       _isAuthenticated = true;
-      // Optionally decode token here to set _currentUser
       notifyListeners();
     } catch (e) {
       _token = null;
       _isAuthenticated = false;
       notifyListeners();
-      rethrow; // Re-throw to handle error in UI
+      rethrow;
+    }
+  }
+
+  Future<void> register(
+    String email,
+    String password,
+    String firstName,
+    String lastName,
+    String? pin,
+  ) async {
+    try {
+      await _apiService.register(
+        email,
+        password,
+        firstName,
+        lastName,
+        pin: pin,
+      );
+    } catch (e) {
+      rethrow;
     }
   }
 
@@ -132,47 +133,32 @@ class AuthProvider extends ChangeNotifier {
   //   String email,
   //   String password,
   //   String firstName,
-  //   String lastName,
-  //   String pin,
-  // ) async {
+  //   String lastName, {
+  //   String? pin,
+  // }) async {
+  //   _isLoading = true;
+  //   notifyListeners();
   //   try {
-  //     // For registration, we just call the API. No token is returned directly.
-  //     // After successful registration, the user usually needs to log in.
-  //     await _apiService.register(email, password, firstName, lastName, pin);
+  //     final newToken = await _apiService.register(
+  //       email,
+  //       password,
+  //       firstName,
+  //       lastName,
+  //       pin: pin,
+  //     );
+  //     await _saveToken(newToken);
+  //     _token = newToken;
+  //     _currentUser = await _apiService.getProfile(_token!);
+  //     _pinVerified =
+  //         _currentUser?.hasPin == false; // If no pin, it's 'verified'
   //   } catch (e) {
-  //     rethrow; // Re-throw to handle error in UI
+  //     debugPrint('Registration failed: $e');
+  //     rethrow;
+  //   } finally {
+  //     _isLoading = false;
+  //     notifyListeners();
   //   }
   // }
-  Future<void> register(
-    String email,
-    String password,
-    String firstName,
-    String lastName, {
-    String? pin,
-  }) async {
-    _isLoading = true;
-    notifyListeners();
-    try {
-      final newToken = await _apiService.register(
-        email,
-        password,
-        firstName,
-        lastName,
-        pin: pin,
-      );
-      await _saveToken(newToken);
-      _token = newToken;
-      _currentUser = await _apiService.getProfile(_token!);
-      _pinVerified =
-          _currentUser?.hasPin == false; // If no pin, it's 'verified'
-    } catch (e) {
-      debugPrint('Registration failed: $e');
-      rethrow;
-    } finally {
-      _isLoading = false;
-      notifyListeners();
-    }
-  }
 
   Future<bool> verifyPin(String pin) async {
     _isLoading = true;
@@ -198,7 +184,7 @@ class AuthProvider extends ChangeNotifier {
     try {
       await _apiService.resetPassword(email, password);
     } catch (e) {
-      rethrow; // Re-throw to handle error in UI
+      rethrow;
     }
   }
 
@@ -206,7 +192,7 @@ class AuthProvider extends ChangeNotifier {
     try {
       await _apiService.resetPin(oldPin, newPin);
     } catch (e) {
-      rethrow; // Re-throw to handle error in UI
+      rethrow;
     }
   }
 
@@ -227,5 +213,44 @@ class AuthProvider extends ChangeNotifier {
 
   Future<void> _saveToken(String token) async {
     await _storage.write(key: 'jwt_token', value: token);
+  }
+
+  Future<Customers> addCustomer(
+    String email,
+    String firstName,
+    String lastName,
+    String customerAddress,
+    String customerBusinessAddress,
+    int phoneNumber,
+    int phoneNumber2,
+    int BVN,
+    int NIN,
+    // Gender gender,
+    DateTime customerDob,
+    String utilityBillUrl,
+    String identificationUrl,
+    String token,
+  ) async {
+    try {
+      final response = await _apiService.createCustomer(
+        token,
+        email,
+        firstName,
+        lastName,
+        customerAddress,
+        customerBusinessAddress,
+        phoneNumber,
+        phoneNumber2,
+        BVN,
+        NIN,
+        // gender,
+        customerDob,
+        utilityBillUrl,
+        identificationUrl,
+      );
+      return response;
+    } catch (e) {
+      rethrow;
+    }
   }
 }

@@ -15,9 +15,7 @@ class _HomePageState extends State<HomePage> {
   Future<void> _logout() async {
     try {
       await Provider.of<AuthProvider>(context, listen: false).logout();
-      Navigator.of(context).pushReplacementNamed(
-        '/login',
-      ); // Navigate to login after successful registration
+      Navigator.of(context).pushReplacementNamed('/login');
     } catch (e) {
       ScaffoldMessenger.of(
         context,

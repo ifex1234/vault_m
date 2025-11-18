@@ -12,23 +12,24 @@ class RegistrationPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(title: const Text('Registration Page')),
       body: Padding(
         padding: const EdgeInsets.only(left: 45, top: 70),
         child: SizedBox(
           height: 900,
           width: 320,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Text(
-                'Welcome to Vault Mobile',
-                style: TextStyle(fontSize: 25, fontWeight: FontWeight.w500),
-              ),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Text(
+                  'Welcome to Vault Mobile',
+                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.w500),
+                ),
 
-              FormWidget(),
-            ],
+                FormWidget(),
+              ],
+            ),
           ),
         ),
       ),
@@ -48,16 +49,13 @@ class _FormWidgetState extends State<FormWidget> {
   bool _isEmailValid = true;
   bool _isNameValid = true;
   bool _isPinValid = true;
-  bool _isPasswordValid = true;
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
   final _pinController = TextEditingController();
-  // final _confirmPasswordController = TextEditingController();
+  bool _isPasswordValid = true;
   bool _isLoading = false;
-  // bool _isPasswordValid = true;
-  // bool _obscurePassword = true;
   Future<void> _register() async {
     if (_formKey.currentState!.validate()) {
       setState(() {
@@ -69,13 +67,17 @@ class _FormWidgetState extends State<FormWidget> {
           _passwordController.text,
           _firstNameController.text,
           _lastNameController.text,
-          pin: _pinController.text.isNotEmpty ? _pinController.text : null,
+          _pinController.text.isNotEmpty ? _pinController.text : null,
         );
 
-        Navigator.of(context).pushReplacementNamed('/home');
+        Navigator.of(context).pushReplacementNamed('/login');
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Registration successful!')),
-        ); // Navigate to welcome page after successful registration
+          const SnackBar(
+            content: Text(
+              'Registration successful!, Kindly log in with your new details',
+            ),
+          ),
+        );
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Registration failed: ${e.toString()}')),
@@ -92,12 +94,12 @@ class _FormWidgetState extends State<FormWidget> {
     if (value == null || value.isEmpty) {
       return 'Please enter an email';
     }
-    // Basic email validation regex
+
     final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
     if (!emailRegex.hasMatch(value)) {
       return 'Invalid email address';
     }
-    return null; // Return null if the email is valid
+    return null;
   }
 
   String? _validateName(String? value) {
@@ -108,7 +110,7 @@ class _FormWidgetState extends State<FormWidget> {
     if (value.length < length) {
       return 'name must be at least $length characters long';
     }
-    return null; // Return null if the name is valid
+    return null;
   }
 
   String? _validatePin(String? value) {
@@ -118,7 +120,7 @@ class _FormWidgetState extends State<FormWidget> {
           return 'PIN must be exactly 4 digits';
         }
       }
-      return null; // PIN is optional
+      return null;
     }
   }
 
@@ -126,7 +128,6 @@ class _FormWidgetState extends State<FormWidget> {
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
-    // _confirmPasswordController.dispose();
     _firstNameController.dispose();
     _lastNameController.dispose();
     _pinController.dispose();

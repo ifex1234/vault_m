@@ -4,6 +4,7 @@ import 'package:vault_m/components/date_picker.dart';
 import 'package:vault_m/components/dialog.dart';
 import 'package:vault_m/components/dropdown.dart';
 import 'package:vault_m/components/plain_field.dart';
+import 'package:vault_m/models/users.dart';
 import 'package:vault_m/services/auth_provider.dart';
 import 'package:provider/provider.dart';
 import 'dart:async';
@@ -65,8 +66,7 @@ void _showConfirmationDialog(BuildContext context) {
 
 class _FormWidgetState extends State<FormWidget> {
   final _formKey = GlobalKey<FormState>();
-  DateTime? _dob;
-  String? _selectedUserGender;
+  // String? _selectedUserGender;
   final _emailController = TextEditingController();
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
@@ -86,10 +86,72 @@ class _FormWidgetState extends State<FormWidget> {
   final _phoneNumber2 = TextEditingController();
   final _BVN = TextEditingController();
   final _NIN = TextEditingController();
-  final _customerDOB = TextEditingController();
+  DateTime? _customerDOB;
   final _utilityBillUrl = TextEditingController();
   final _identificationUrl = TextEditingController();
   bool _isLoading = false;
+
+  // Future<int> _loadUser() async {
+  //   try {
+  //     final user = await Provider.of<AuthProvider>(
+  //       context,
+  //       listen: false,
+  //     ).loadUser();
+  //     if (user.hasPin) {
+  //       return user.id;
+  //     }
+  //     // If the user exists but does not have a PIN, return a sentinel value.
+  //     return -1;
+  //   } catch (e) {
+  //     ScaffoldMessenger.of(
+  //       context,
+  //     ).showSnackBar(SnackBar(content: Text('login failed: ${e.toString()}')));
+  //     // Return a sentinel value on error.
+  //     return -1;
+  //   }
+  // }
+
+  Future<void> _createCustomer() async {
+    final token = Provider.of<AuthProvider>(context, listen: false).token;
+    if (_formKey.currentState!.validate()) {
+      setState(() {
+        _isLoading = true;
+      });
+      try {
+        _verifyAddress();
+        _verifyBizAddress();
+        if (Provider.of<AuthProvider>(context, listen: false).token == null) {
+          throw Exception('User not authenticated.');
+        }
+        await Provider.of<AuthProvider>(context, listen: false).addCustomer(
+          _emailController.text,
+          _firstNameController.text,
+          _lastNameController.text,
+          _customerAddress!,
+          _customerBusinessAddress!,
+          _phoneNumber.text as int,
+          _phoneNumber2.text as int,
+          _BVN.text as int,
+          _NIN.text as int,
+          _customerDOB!,
+          _identificationUrl.text,
+          _utilityBillUrl.text,
+          token!,
+        );
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Successfully created user')),
+        );
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('login failed: ${e.toString()}')),
+        );
+      } finally {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
 
   String _verifyAddress() {
     return _customerAddress = "$_street $_street2  $_area  $_bStop  $_state";
@@ -119,7 +181,7 @@ class _FormWidgetState extends State<FormWidget> {
     _bizState.dispose();
     _customerAddress;
     _customerBusinessAddress;
-    _customerDOB.dispose();
+    _customerDOB;
     _identificationUrl.dispose();
     _phoneNumber.dispose();
     _phoneNumber2.dispose();
@@ -217,35 +279,34 @@ class _FormWidgetState extends State<FormWidget> {
               ),
               Row(
                 children: [
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      DatePicker(
-                        initialDate: _dob,
-                        onDateSelected: (date) {
-                          setState(() {
-                            _dob = date;
-                          });
-                        },
-                      ),
-                    ],
-                  ),
-
+                  // Column(
+                  //   mainAxisAlignment: MainAxisAlignment.center,
+                  //   children: <Widget>[
+                  //     DatePicker(
+                  //       initialDate: _dob,
+                  //       onDateSelected: (date) {
+                  //         setState(() {
+                  //           _dob = date;
+                  //         });
+                  //       },
+                  //     ),
+                  //   ],
+                  // ),
                   SizedBox(width: 10),
-                  Expanded(
-                    child: GenderSelector(
-                      initialGender: _selectedUserGender,
-                      onChanged: (gender) {
-                        setState(() {
-                          _selectedUserGender = gender;
-                        });
-                        print('Selected gender: $_selectedUserGender');
-                      },
-                      // You can customize options or hint text
-                      genderOptions: const ['Male', 'Female'],
-                      hintText: 'Gender',
-                    ),
-                  ),
+                  // Expanded(
+                  //   child: GenderSelector(
+                  //     initialGender: _selectedUserGender,
+                  //     onChanged: (gender) {
+                  //       setState(() {
+                  //         _selectedUserGender = gender;
+                  //       });
+                  //       print('Selected gender: $_selectedUserGender');
+                  //     },
+                  //     // You can customize options or hint text
+                  //     genderOptions: const ['Male', 'Female'],
+                  //     hintText: 'Gender',
+                  //   ),
+                  // ),
                 ],
               ),
 
@@ -454,7 +515,7 @@ class _FormWidgetState extends State<FormWidget> {
                           ? CircularProgressIndicator()
                           : ElevatedButton(
                               onPressed: () {
-                                // _register();
+                                _createCustomer();
                               },
                               style: ElevatedButton.styleFrom(
                                 minimumSize: Size(200, 50),

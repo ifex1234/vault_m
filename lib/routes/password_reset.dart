@@ -38,9 +38,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
             ),
           ),
         );
-        Navigator.of(context).pushReplacementNamed(
-          '/login',
-        ); // Navigate to login after successful registration
+        Navigator.of(context).pushReplacementNamed('/login');
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('password reset failed: ${e.toString()}')),
@@ -71,7 +69,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
     if (value.length < 6) {
       return 'Password must be at least 6 characters long';
     }
-    return null; // Return null if the password is valid
+    return null;
   }
 
   String? _validateConfirmPassword(String? value) {
@@ -81,87 +79,91 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
     if (value != _passwordController.text) {
       return 'Passwords do not match';
     }
-    return null; // Return null if the confirm password is valid
+    return null;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        // leading: ,
         title: const Text('Sign In'),
         backgroundColor: const Color.fromARGB(255, 252, 232, 252),
       ),
-      body: Padding(
-        padding: const EdgeInsets.only(left: 45, top: 120),
-        child: SizedBox(
-          height: 500,
-          width: 320,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: 40),
-              Text(
-                'Change Password',
-                style: TextStyle(fontSize: 30, fontWeight: FontWeight.w500),
-              ),
-              SizedBox(height: 20),
+      body: Form(
+        key: _formKey,
+        child: Padding(
+          padding: const EdgeInsets.only(left: 45, top: 120),
+          child: SizedBox(
+            height: 500,
+            width: 320,
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: 40),
+                  Text(
+                    'Change Password',
+                    style: TextStyle(fontSize: 30, fontWeight: FontWeight.w500),
+                  ),
+                  SizedBox(height: 20),
 
-              PlainField2(
-                controller: _emailController,
-                labelText: 'Email',
-                hintText: 'Enter your email',
-                validator: (value) {
-                  final error = _validateEmail(value);
-                  setState(() {
-                    _isEmailValid = error == null;
-                  });
-                  return error;
-                },
-                isInputValid: _isEmailValid,
-              ),
-              SizedBox(height: 25),
+                  PlainField2(
+                    controller: _emailController,
+                    labelText: 'Email',
+                    hintText: 'Enter your email',
+                    validator: (value) {
+                      final error = _validateEmail(value);
+                      setState(() {
+                        _isEmailValid = error == null;
+                      });
+                      return error;
+                    },
+                    isInputValid: _isEmailValid,
+                  ),
+                  SizedBox(height: 25),
 
-              ObscuredField2(
-                controller: _passwordController,
-                labelText: 'Password',
-                hintText: 'Enter your password',
-                validator: (value) {
-                  final error = _validatePassword(value);
-                  setState(() {
-                    _isPasswordValid = error == null;
-                  });
-                  return error;
-                },
-                isInputValid: _isPassword1Valid,
-              ),
-              SizedBox(height: 25),
+                  ObscuredField2(
+                    controller: _passwordController,
+                    labelText: 'Password',
+                    hintText: 'Enter your password',
+                    validator: (value) {
+                      final error = _validatePassword(value);
+                      setState(() {
+                        _isPasswordValid = error == null;
+                      });
+                      return error;
+                    },
+                    isInputValid: _isPassword1Valid,
+                  ),
+                  SizedBox(height: 25),
 
-              ObscuredField2(
-                controller: _confirmPasswordController,
-                labelText: 'Confirm Password',
-                hintText: 'Confirm Password',
-                validator: (value) {
-                  final error = _validateConfirmPassword(value);
-                  setState(() {
-                    _isPassword1Valid = error == null;
-                  });
-                  return error;
-                },
-                isInputValid: _isPassword1Valid,
+                  ObscuredField2(
+                    controller: _confirmPasswordController,
+                    labelText: 'Confirm Password',
+                    hintText: 'Confirm Password',
+                    validator: (value) {
+                      final error = _validateConfirmPassword(value);
+                      setState(() {
+                        _isPassword1Valid = error == null;
+                      });
+                      return error;
+                    },
+                    isInputValid: _isPassword1Valid,
+                  ),
+                  SizedBox(height: 25),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color.fromARGB(255, 235, 221, 240),
+                    ),
+                    onPressed: _passwordReset,
+                    child: Text(
+                      'Change Password',
+                      style: TextStyle(color: Colors.deepPurple),
+                    ),
+                  ),
+                ],
               ),
-              SizedBox(height: 25),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color.fromARGB(255, 235, 221, 240),
-                ),
-                onPressed: _passwordReset,
-                child: Text(
-                  'Change Password',
-                  style: TextStyle(color: Colors.deepPurple),
-                ),
-              ),
-            ],
+            ),
           ),
         ),
       ),

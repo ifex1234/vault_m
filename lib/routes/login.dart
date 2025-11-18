@@ -1,5 +1,4 @@
 // ignore_for_file: use_build_context_synchronously
-
 import 'package:flutter/material.dart';
 import 'package:vault_m/components/obsure_field.dart';
 import 'package:vault_m/components/plain_field.dart';
@@ -19,23 +18,25 @@ class LoginPage extends StatelessWidget {
         child: SizedBox(
           height: 700,
           width: 320,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Text(
-                'Vault Mobile',
-                style: TextStyle(fontSize: 50, fontWeight: FontWeight.w500),
-              ),
-              SizedBox(height: 20),
-              Text(
-                'Sign in',
-                style: TextStyle(fontSize: 25, fontWeight: FontWeight.w400),
-              ),
-              SizedBox(height: 20),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Text(
+                  'Vault Mobile',
+                  style: TextStyle(fontSize: 50, fontWeight: FontWeight.w500),
+                ),
+                SizedBox(height: 20),
+                Text(
+                  'Sign in',
+                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.w400),
+                ),
+                SizedBox(height: 20),
 
-              FormWidget(),
-            ],
+                FormWidget(),
+              ],
+            ),
           ),
         ),
       ),
@@ -102,7 +103,7 @@ class _FormWidgetState extends State<FormWidget> {
     if (value.length < 6) {
       return 'Password must be at least 6 characters long';
     }
-    return null; // Return null if the password is valid
+    return null;
   }
 
   @override
