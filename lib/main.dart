@@ -1,6 +1,8 @@
 // ignore_for_file: use_build_context_synchronously
 import 'package:flutter/material.dart';
+import 'package:vault_m/routes/add_customer.dart';
 import 'package:vault_m/routes/customers.dart';
+import 'package:vault_m/routes/displayPages.dart';
 import 'package:vault_m/routes/home.dart';
 import 'package:vault_m/routes/login.dart';
 import 'package:vault_m/routes/register.dart';
@@ -17,13 +19,13 @@ Future<void> main() async {
   runApp(
     ChangeNotifierProvider(
       create: (context) => AuthProvider(),
-      child: const MyApp(),
+      child: const MyApp1(),
     ),
   );
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class MyApp1 extends StatelessWidget {
+  const MyApp1({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +51,7 @@ class MyApp extends StatelessWidget {
                   if (Navigator.of(context).canPop()) {
                     Navigator.of(context).popUntil((route) => route.isFirst);
                   }
-                  Navigator.of(context).pushReplacementNamed('/register');
+                  Navigator.of(context).pushReplacementNamed('/display');
                 }
               });
               return const Scaffold(
@@ -68,9 +70,63 @@ class MyApp extends StatelessWidget {
           '/welcome': (context) => const WelcomePage(),
           '/home': (context) => const HomePage(),
           '/customers': (context) => const CustomersHomeScreen(),
-          // '/create-customer': (context) => const CreateCustomerPage(),
+          '/create-customer': (context) => const AddCustomerPage(),
+          '/display': (context) => const Displaypages(),
         },
       ),
     );
   }
 }
+
+// class MyApp extends StatelessWidget {
+//   const MyApp({super.key});
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return MultiProvider(
+//       providers: [ChangeNotifierProvider(create: (_) => AuthProvider())],
+//       child: MaterialApp(
+//         title: 'Vault mobile App',
+//         theme: ThemeData(
+//           primarySwatch: Colors.deepPurple,
+//           visualDensity: VisualDensity.adaptivePlatformDensity,
+//         ),
+//         home: Consumer<AuthProvider>(
+//           builder: (context, authProvider, child) {
+//             // Show a loading indicator while checking auth status
+//             if (authProvider.token == null && !authProvider.isAuthenticated) {
+//               Future.microtask(() async {
+//                 await Future.delayed(
+//                   Duration.zero,
+//                 ); // Allow builder to return before async
+//                 if (!authProvider.isAuthenticated &&
+//                     authProvider.token == null) {
+//                   // Only navigate if still not authenticated after initial load
+//                   if (Navigator.of(context).canPop()) {
+//                     Navigator.of(context).popUntil((route) => route.isFirst);
+//                   }
+//                   Navigator.of(context).pushReplacementNamed('/register');
+//                 }
+//               });
+//               return const Scaffold(
+//                 body: Center(child: CircularProgressIndicator()),
+//               );
+//             }
+
+//             return authProvider.isAuthenticated
+//                 ? const WelcomePage()
+//                 : const RegistrationPage();
+//           },
+//         ),
+//         routes: {
+//           '/login': (context) => const LoginPage(),
+//           '/register': (context) => const RegistrationPage(),
+//           '/welcome': (context) => const WelcomePage(),
+//           '/home': (context) => const HomePage(),
+//           '/customers': (context) => const CustomersHomeScreen(),
+//           // '/create-customer': (context) => const CreateCustomerPage(),
+//         },
+//       ),
+//     );
+//   }
+// }

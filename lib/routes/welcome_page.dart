@@ -19,7 +19,7 @@ class _WelcomePageState extends State<WelcomePage> {
         child: Consumer<AuthProvider>(
           builder: (context, authProvider, child) {
             final firstName = authProvider.currentUser?.firstName ?? 'John';
-            final lastName = authProvider.currentUser?.firstName ?? 'Doe';
+            final lastName = authProvider.currentUser?.firstName ?? 'Peter';
 
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -88,26 +88,6 @@ class _NumberPadWithBadgeState extends State<NumberPadWithBadge> {
     }
   }
 
-  // void _unlockh() async {
-  //   if (_formKey.currentState!.validate()) {
-  //     final authProvider = Provider.of<AuthProvider>(context, listen: false);
-  //     try {
-  //       final success = await authProvider.verifyPin(_currentInput);
-  //       if (success) {
-  //         // PIN verified, AuthProvider will notify, and main app will navigate
-  //       } else {
-  //         ScaffoldMessenger.of(context).showSnackBar(
-  //           const SnackBar(content: Text('Invalid PIN. Please try again.')),
-  //         );
-  //       }
-  //     } catch (e) {
-  //       ScaffoldMessenger.of(context).showSnackBar(
-  //         SnackBar(content: Text('PIN verification failed: ${e.toString()}')),
-  //       );
-  //     }
-  //   }
-  // }
-
   Future<void> _unlock() async {
     try {
       final data = await Provider.of<AuthProvider>(
@@ -135,13 +115,6 @@ class _NumberPadWithBadgeState extends State<NumberPadWithBadge> {
     }
   }
 
-  // void _onClearButtonPressed() {
-  //   setState(() {
-  //     _currentInput = '';
-  //   });
-  //   widget.onInputChanged?.call(_currentInput);
-  // }
-
   void _onBackspaceButtonPressed() {
     if (_currentInput.isNotEmpty) {
       setState(() {
@@ -158,14 +131,11 @@ class _NumberPadWithBadgeState extends State<NumberPadWithBadge> {
     final textDefaultColor = widget.textColor ?? Colors.white;
     final badgeDefaultColor =
         widget.badgeColor ?? theme.colorScheme.secondaryContainer;
-    final badgeTextColor = theme
-        .colorScheme
-        .onSecondaryContainer; // Or a fixed color like Colors.black
+    final badgeTextColor = theme.colorScheme.onSecondaryContainer;
 
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        // The Badge Display
         Container(
           height: widget.badgeHeight,
           width: 150,
@@ -210,10 +180,10 @@ class _NumberPadWithBadgeState extends State<NumberPadWithBadge> {
               crossAxisSpacing: 30.0,
               mainAxisSpacing: 10.0,
             ),
-            itemCount: 9, // Numbers 1 through 9
+            itemCount: 9,
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             itemBuilder: (context, index) {
-              final int number = index + 1; // Map index 0-8 to numbers 1-9
+              final int number = index + 1;
               return ElevatedButton(
                 onPressed: () => _onNumberButtonPressed(number),
                 style: ElevatedButton.styleFrom(
@@ -262,28 +232,7 @@ class _NumberPadWithBadgeState extends State<NumberPadWithBadge> {
                     ),
                   ),
                 ),
-                // Clear Button
-                // Expanded(
-                //   child: ElevatedButton(
-                //     onPressed: _onClearButtonPressed,
-                //     style: ElevatedButton.styleFrom(
-                //       backgroundColor:
-                //           Colors.red.shade400, // Different color for clear
-                //       shape: RoundedRectangleBorder(
-                //         borderRadius: BorderRadius.circular(28.0),
-                //       ),
-                //       padding: const EdgeInsets.symmetric(vertical: 18.0),
-                //     ),
-                //     child: Text(
-                //       'Clear',
-                //       style: TextStyle(
-                //         fontSize: 20.0,
-                //         fontWeight: FontWeight.bold,
-                //         color: textDefaultColor,
-                //       ),
-                //     ),
-                //   ),
-                // ),
+
                 const SizedBox(width: 8.0),
                 // Zero Button
                 Expanded(
@@ -307,7 +256,6 @@ class _NumberPadWithBadgeState extends State<NumberPadWithBadge> {
                   ),
                 ),
                 const SizedBox(width: 8.0),
-                // Backspace Button
                 SizedBox(width: 70),
               ],
             ),
@@ -333,8 +281,6 @@ class _NumberPadWithBadgeState extends State<NumberPadWithBadge> {
             size: 20.0,
           ),
         ),
-
-        // Confirm Button
       ],
     );
   }

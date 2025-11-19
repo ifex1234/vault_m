@@ -14,7 +14,7 @@ class LoginPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.only(left: 45, top: 70),
+        padding: const EdgeInsets.only(left: 30, top: 70),
         child: SizedBox(
           height: 700,
           width: 320,

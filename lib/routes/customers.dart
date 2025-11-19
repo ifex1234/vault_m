@@ -28,30 +28,13 @@ class _CustomersHomeScreenState extends State<CustomersHomeScreen> {
       setState(() {
         _mycustomersFuture = ApiService().fetchCustomers(
           authProvider.token!,
-          24,
+          1,
         );
       });
     } else {
-      // Handle case where not authenticated, perhaps navigate to login
       _mycustomersFuture = Future.value([]); // Return an empty list
     }
   }
-
-  // void _loadPosts() {
-  //   final authProvider = Provider.of<AuthProvider>(context, listen: false);
-  //   if (authProvider.token != null) {
-  //     setState(() {
-  //       _postsFuture = _apiService.fetchAllPosts(authProvider.token!);
-  //     });
-  //   } else {
-  //     // If no token, return an empty list or handle as an error
-  //     setState(() {
-  //       _postsFuture = Future.value(
-  //         [],
-  //       ); // Or Future.error('Not authenticated');
-  //     });
-  //   }
-  // }
 
   Future<void> _refreshList() async {
     await _loadMyCustomers();
@@ -100,6 +83,7 @@ class _CustomersHomeScreenState extends State<CustomersHomeScreen> {
                   itemCount: snapshot.data?.length,
                   itemBuilder: (context, index) {
                     final data = snapshot.data![index];
+                    debugPrint(data.email);
                     return Center(
                       child: InkWell(
                         onTap: () => Navigator.push(
@@ -117,13 +101,11 @@ class _CustomersHomeScreenState extends State<CustomersHomeScreen> {
                           width: 305,
                           margin: EdgeInsets.only(bottom: 10, top: 10),
 
-                          // color: const Color.fromARGB(255, 244, 233, 247),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               SizedBox(
-                                // color: const Color.fromARGB(255, 241, 223, 245),
                                 width: 50,
                                 child: AvatarWidget(initials: 'VM', radius: 20),
                               ),
@@ -135,7 +117,6 @@ class _CustomersHomeScreenState extends State<CustomersHomeScreen> {
                                     style: TextStyle(fontSize: 10),
                                   ),
                                   SizedBox(
-                                    // color: const Color.fromARGB(255, 241, 223, 245),
                                     width: 200,
                                     child: Text(
                                       data.firstName,
@@ -148,11 +129,7 @@ class _CustomersHomeScreenState extends State<CustomersHomeScreen> {
                                 ],
                               ),
 
-                              SizedBox(
-                                // color: const Color.fromARGB(255, 241, 223, 245),
-                                width: 50,
-                                child: Text('40%'),
-                              ),
+                              SizedBox(width: 50, child: Text('40%')),
                             ],
                           ),
                         ),

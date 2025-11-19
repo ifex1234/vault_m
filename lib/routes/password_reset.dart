@@ -92,7 +92,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
       body: Form(
         key: _formKey,
         child: Padding(
-          padding: const EdgeInsets.only(left: 45, top: 120),
+          padding: const EdgeInsets.only(left: 30, top: 120),
           child: SizedBox(
             height: 500,
             width: 320,

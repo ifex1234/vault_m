@@ -85,74 +85,76 @@ class _ChangePinState extends State<ChangePin> {
         backgroundColor: const Color.fromARGB(255, 252, 232, 252),
       ),
       body: Padding(
-        padding: const EdgeInsets.only(left: 45, top: 60),
+        padding: const EdgeInsets.only(left: 30, top: 60),
         child: SizedBox(
           height: 500,
           width: 320,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: 40),
-              Text(
-                'Change pin',
-                style: TextStyle(fontSize: 30, fontWeight: FontWeight.w500),
-              ),
-
-              ObscuredField(
-                controller: _oldPinController,
-                isInputValid: _isOldPinValid,
-                labelText: 'Old pin',
-                hintText: 'Old pin',
-                validator: (value) {
-                  final error = _validateOldPin(value);
-                  setState(() {
-                    _isOldPinValid = error == null;
-                  });
-                  return error;
-                },
-              ),
-              SizedBox(height: 75),
-
-              ObscuredField(
-                controller: _newPinController,
-                isInputValid: _isNewPinValid,
-                labelText: 'New pin',
-                hintText: 'New pin',
-                validator: (value) {
-                  final error = _validateNewPin(value);
-                  setState(() {
-                    _isNewPinValid = error == null;
-                  });
-                  return error;
-                },
-              ),
-              SizedBox(height: 25),
-
-              ObscuredField(
-                controller: _confirmNewPinController,
-                isInputValid: _isConfirmPinValid,
-                labelText: 'Confirm pin',
-                hintText: 'Confirm pin',
-                validator: (value) {
-                  final error = _validateConfirmPin(value);
-                  setState(() {
-                    _isConfirmPinValid = error == null;
-                  });
-                  return error;
-                },
-              ),
-              SizedBox(height: 25),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color.fromARGB(255, 235, 221, 240),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 40),
+                Text(
+                  'Change pin',
+                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.w500),
                 ),
-                onPressed: _pinReset,
-                child: Text(
-                  'Change',
-                  style: TextStyle(color: Colors.deepPurple),
+
+                ObscuredField(
+                  controller: _oldPinController,
+                  isInputValid: _isOldPinValid,
+                  labelText: 'Old pin',
+                  hintText: 'Old pin',
+                  validator: (value) {
+                    final error = _validateOldPin(value);
+                    setState(() {
+                      _isOldPinValid = error == null;
+                    });
+                    return error;
+                  },
                 ),
-              ),
-            ],
+                SizedBox(height: 75),
+
+                ObscuredField(
+                  controller: _newPinController,
+                  isInputValid: _isNewPinValid,
+                  labelText: 'New pin',
+                  hintText: 'New pin',
+                  validator: (value) {
+                    final error = _validateNewPin(value);
+                    setState(() {
+                      _isNewPinValid = error == null;
+                    });
+                    return error;
+                  },
+                ),
+                SizedBox(height: 25),
+
+                ObscuredField(
+                  controller: _confirmNewPinController,
+                  isInputValid: _isConfirmPinValid,
+                  labelText: 'Confirm pin',
+                  hintText: 'Confirm pin',
+                  validator: (value) {
+                    final error = _validateConfirmPin(value);
+                    setState(() {
+                      _isConfirmPinValid = error == null;
+                    });
+                    return error;
+                  },
+                ),
+                SizedBox(height: 25),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(255, 235, 221, 240),
+                  ),
+                  onPressed: _pinReset,
+                  child: Text(
+                    'Change',
+                    style: TextStyle(color: Colors.deepPurple),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

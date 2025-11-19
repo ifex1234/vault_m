@@ -64,7 +64,7 @@ class AuthProvider extends ChangeNotifier {
         firstName: decodedToken['firstName'],
         lastName: decodedToken['lastName'],
         hasPin: decodedToken['hasPin'],
-      ); 
+      );
       return currentUser;
     } else {
       _token = null;

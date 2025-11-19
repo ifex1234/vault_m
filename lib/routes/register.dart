@@ -140,7 +140,7 @@ class _FormWidgetState extends State<FormWidget> {
       key: _formKey,
       child: Center(
         child: SizedBox(
-          height: 540,
+          height: 640,
           width: 320,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
