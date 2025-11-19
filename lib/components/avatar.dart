@@ -12,7 +12,7 @@ class AvatarWidget extends StatelessWidget {
     super.key,
     this.imageUrl,
     this.initials,
-    this.radius = 44.0, // Default radius
+    this.radius = 44.0,
     this.backgroundColor,
     this.foregroundColor,
     this.textStyle,
@@ -21,7 +21,6 @@ class AvatarWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (imageUrl != null && imageUrl!.isNotEmpty) {
-      // Display image if imageUrl is provided
       return CircleAvatar(
         radius: radius,
         backgroundColor: backgroundColor,
@@ -29,7 +28,6 @@ class AvatarWidget extends StatelessWidget {
         backgroundImage: NetworkImage(imageUrl!),
       );
     } else if (initials != null && initials!.isNotEmpty) {
-      // Display initials if no image and initials are provided
       return CircleAvatar(
         radius: radius,
         backgroundColor: backgroundColor ?? Theme.of(context).primaryColor,
@@ -38,22 +36,15 @@ class AvatarWidget extends StatelessWidget {
           initials!,
           style:
               textStyle ??
-              TextStyle(
-                fontSize: radius * 0.5, // Adjust font size based on radius
-                fontWeight: FontWeight.bold,
-              ),
+              TextStyle(fontSize: radius * 0.5, fontWeight: FontWeight.bold),
         ),
       );
     } else {
-      // Fallback to a default icon if no image or initials
       return CircleAvatar(
         radius: radius,
         backgroundColor: backgroundColor ?? Colors.grey[300],
         foregroundColor: foregroundColor ?? Colors.grey[700],
-        child: Icon(
-          Icons.person,
-          size: radius * 1.2, // Adjust icon size based on radius
-        ),
+        child: Icon(Icons.person, size: radius * 1.2),
       );
     }
   }

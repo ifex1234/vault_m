@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 class CameraDialog extends StatelessWidget {
   final String title;
   final String message;
-  final List<Widget>? actions; // Optional list of buttons/actions
+  final List<Widget>? actions;
   final Color? backgroundColor;
   final EdgeInsetsGeometry? contentPadding;
   final BorderRadiusGeometry? borderRadius;
-  final Widget? icon; // Optional icon at the top
+  final Widget? icon;
 
   const CameraDialog({
     super.key,
@@ -23,17 +23,13 @@ class CameraDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      backgroundColor:
-          Colors.blueGrey, // Make the default dialog background transparent
+      backgroundColor: Colors.blueGrey,
       child: Stack(
-        clipBehavior: Clip.none, // Allow children to overflow
+        clipBehavior: Clip.none,
         alignment: Alignment.topCenter,
         children: [
-          // Main content card
           Container(
-            margin: EdgeInsets.only(
-              top: icon != null ? 36.0 : 0.0,
-            ), // Adjust margin if icon is present
+            margin: EdgeInsets.only(top: icon != null ? 36.0 : 0.0),
             decoration: BoxDecoration(
               color: backgroundColor ?? Theme.of(context).cardColor,
               borderRadius: borderRadius ?? BorderRadius.circular(12.0),
@@ -49,11 +45,10 @@ class CameraDialog extends StatelessWidget {
                 contentPadding ??
                 const EdgeInsets.symmetric(horizontal: 24.0, vertical: 20.0),
             child: Column(
-              mainAxisSize:
-                  MainAxisSize.min, // Make column only take needed space
+              mainAxisSize: MainAxisSize.min,
               children: [
                 if (icon != null) const SizedBox(height: 36.0),
-                Icon(Icons.photo_camera), // Space for the icon if it's there
+                Icon(Icons.photo_camera),
                 Text(
                   title,
                   style: Theme.of(context).textTheme.headlineSmall?.copyWith(
@@ -147,8 +142,6 @@ class CameraDialog extends StatelessWidget {
               ],
             ),
           ),
-
-          // Optional icon positioned at the top
         ],
       ),
     );

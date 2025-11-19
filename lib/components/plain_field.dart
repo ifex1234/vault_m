@@ -32,7 +32,7 @@ class _PlainFieldState extends State<PlainField> {
         fillColor: const Color.fromARGB(255, 241, 223, 245),
         border: UnderlineInputBorder(borderRadius: BorderRadius.circular(10.0)),
         errorBorder: widget.isInputValid
-            ? null // Use default error border when valid
+            ? null
             : const UnderlineInputBorder(
                 borderSide: BorderSide(color: Colors.red, width: 4.0),
               ),
@@ -109,7 +109,7 @@ class _PlainFieldState2 extends State<PlainField2> {
         fillColor: const Color.fromARGB(255, 241, 223, 245),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0)),
         errorBorder: widget.isInputValid!
-            ? null // Use default error border when valid
+            ? null
             : const OutlineInputBorder(
                 borderSide: BorderSide(color: Colors.red, width: 4.0),
               ),

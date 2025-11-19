@@ -47,7 +47,7 @@ class _GenderSelectorState extends State<GenderSelector> {
               vertical: 8.0,
             ),
           ),
-          isExpanded: true, // Make the dropdown take full width
+          isExpanded: true,
           items: widget.genderOptions.map((String gender) {
             return DropdownMenuItem<String>(value: gender, child: Text(gender));
           }).toList(),

@@ -310,7 +310,6 @@ class ApiService {
 
   // Future<List<User>> fetchAllUsers() async {
   //   final response = await http.get(Uri.parse('$_baseUrl/auth/users'));
-
   //   if (response.statusCode == 200) {
   //     List<dynamic> data = jsonDecode(response.body);
   //     return data.map((json) => User.fromJson(json)).toList();

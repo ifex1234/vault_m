@@ -10,11 +10,6 @@ import 'package:vault_m/services/auth_provider.dart';
 import 'package:camera/camera.dart';
 
 late List<CameraDescription> cameras;
-// Future<void> main() async {
-//   WidgetsFlutterBinding.ensureInitialized();
-//   cameras = await availableCameras();
-//   runApp(const MyApp());
-// }
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -40,59 +35,33 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.deepPurple,
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
-        home:
-            //  Consumer<AuthProvider>(
-            //   builder: (context, authProvider, child) {
-            //     if (authProvider.isLoading) {
-            //       return const Scaffold(
-            //         body: Center(child: CircularProgressIndicator()),
-            //       );
-            //     } else if (authProvider.isAuthenticated) {
-            //       if (authProvider.currentUser?.hasPin == true &&
-            //           !authProvider.isPinVerified) {
-            //         return const WelcomePage(); // Redirect to PIN verification
-            //       } else {
-            //         return const HomePage(); // Access home screen
-            //       }
-            //     } else {
-            //       return const LoginPage(); // Not authenticated, go to login
-            //     }
-            //   },
-            // ),
-            Consumer<AuthProvider>(
-              builder: (context, authProvider, child) {
-                // Show a loading indicator while checking auth status
-                if (authProvider.token == null &&
-                    !authProvider.isAuthenticated) {
-                  // This is a bit of a hack to ensure _loadTokenAndUser completes
-                  // before deciding the route. A better way would be a dedicated SplashScreen.
-                  // For simplicity, we'll wait for the first notifyListeners() after
-                  // _loadTokenAndUser has finished.
-                  Future.microtask(() async {
-                    await Future.delayed(
-                      Duration.zero,
-                    ); // Allow builder to return before async
-                    if (!authProvider.isAuthenticated &&
-                        authProvider.token == null) {
-                      // Only navigate if still not authenticated after initial load
-                      if (Navigator.of(context).canPop()) {
-                        Navigator.of(
-                          context,
-                        ).popUntil((route) => route.isFirst);
-                      }
-                      Navigator.of(context).pushReplacementNamed('/register');
-                    }
-                  });
-                  return const Scaffold(
-                    body: Center(child: CircularProgressIndicator()),
-                  );
+        home: Consumer<AuthProvider>(
+          builder: (context, authProvider, child) {
+            // Show a loading indicator while checking auth status
+            if (authProvider.token == null && !authProvider.isAuthenticated) {
+              Future.microtask(() async {
+                await Future.delayed(
+                  Duration.zero,
+                ); // Allow builder to return before async
+                if (!authProvider.isAuthenticated &&
+                    authProvider.token == null) {
+                  // Only navigate if still not authenticated after initial load
+                  if (Navigator.of(context).canPop()) {
+                    Navigator.of(context).popUntil((route) => route.isFirst);
+                  }
+                  Navigator.of(context).pushReplacementNamed('/register');
                 }
+              });
+              return const Scaffold(
+                body: Center(child: CircularProgressIndicator()),
+              );
+            }
 
-                return authProvider.isAuthenticated
-                    ? const WelcomePage()
-                    : const RegistrationPage();
-              },
-            ),
+            return authProvider.isAuthenticated
+                ? const WelcomePage()
+                : const RegistrationPage();
+          },
+        ),
         routes: {
           '/login': (context) => const LoginPage(),
           '/register': (context) => const RegistrationPage(),
@@ -105,25 +74,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-// import 'package:flutter/material.dart';
-// import 'package:vault_m/routes/home.dart';
-
-// void main() {
-//   runApp(const MyApp());
-// }
-
-// class MyApp extends StatelessWidget {
-//   const MyApp({super.key});
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       title: 'Vault mobile App',
-//       theme: ThemeData(
-//         primarySwatch: Colors.deepPurple,
-//         visualDensity: VisualDensity.adaptivePlatformDensity,
-//       ),
-//       home: const HomePage(),
-//     );
-//   }
-// }

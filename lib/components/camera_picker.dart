@@ -23,32 +23,26 @@ class _CameraScreenState extends State<CameraScreen> {
     _controller = CameraController(
       // Get a specific camera from the list of available cameras.
       cameras[0], // Using the first available camera (usually back camera)
-      // Define the resolution to use.
       ResolutionPreset.medium,
     );
 
-    // Next, initialize the controller. This returns a Future.
     _initializeControllerFuture = _controller.initialize();
   }
 
   @override
   void dispose() {
-    // Dispose of the controller when the widget is disposed.
     _controller.dispose();
     super.dispose();
   }
 
   Future<void> _takePicture() async {
     try {
-      // Ensure that the camera is initialized.
       await _initializeControllerFuture;
 
-      // Construct a path where the image should be saved using the path_provider package.
       final directory = await getTemporaryDirectory();
       final path =
           '${directory.path}/${DateTime.now().millisecondsSinceEpoch}.png';
 
-      // Attempt to take a picture and log where it's been saved.
       final XFile image = await _controller.takePicture();
       await image.saveTo(path);
 
@@ -56,8 +50,7 @@ class _CameraScreenState extends State<CameraScreen> {
         _imagePath = path;
       });
     } catch (e) {
-      // If an error occurs, log it to the console.
-      print(e);
+      debugPrint(e as String?);
     }
   }
 
@@ -68,7 +61,6 @@ class _CameraScreenState extends State<CameraScreen> {
         future: _initializeControllerFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            // If the Future is complete, display the preview.
             return Column(
               children: [
                 Expanded(
@@ -88,7 +80,6 @@ class _CameraScreenState extends State<CameraScreen> {
               ],
             );
           } else {
-            // Otherwise, display a loading indicator.
             return const Center(child: CircularProgressIndicator());
           }
         },

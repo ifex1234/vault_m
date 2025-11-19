@@ -34,7 +34,7 @@ class _ObscuredFieldState extends State<ObscuredField> {
         hintText: widget.hintText,
         border: const OutlineInputBorder(),
         errorBorder: widget.isInputValid
-            ? null // Use default error border when valid
+            ? null
             : const OutlineInputBorder(
                 borderSide: BorderSide(color: Colors.red, width: 4.0),
               ),
@@ -89,7 +89,7 @@ class _ObscuredFieldState2 extends State<ObscuredField2> {
         filled: true,
         border: UnderlineInputBorder(borderRadius: BorderRadius.circular(10.0)),
         errorBorder: widget.isInputValid
-            ? null // Use default error border when valid
+            ? null
             : const UnderlineInputBorder(
                 borderSide: BorderSide(color: Colors.red, width: 4.0),
               ),
